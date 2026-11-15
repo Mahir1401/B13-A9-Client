@@ -2,13 +2,14 @@
 import { Home, Moon, PawPrint, Search, Sun } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
-export default function Navbar({ user, onLogout }) {
+export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const pathname = usePathname();
 
-  // Sync state with HTML dark class element
   useEffect(() => {
     const root = window.document.documentElement;
     if (isDarkMode) {
@@ -19,98 +20,160 @@ export default function Navbar({ user, onLogout }) {
   }, [isDarkMode]);
 
   return (
-    /* Added mx-auto to center container and px-4 for padding on smaller screen sizes */
-    <div className="container mx-auto px-4 flex justify-between items-center h-[4.5rem]">
-      <Link href="/" className="flex items-center gap-[0.6rem]">
-        <PawPrint className="text-purple-600 dark:text-purple-400" />
-        <span className="font-[Fraunces] text-[1.35rem] font-bold text-zinc-900 dark:text-zinc-50 tracking-[-0.02em]">
-          Paws & Homes
-        </span>
-      </Link>
-      
-      <div className="flex items-center space-x-6 text-sm font-medium">
-        <Link 
-          href="/" 
-          className="flex gap-1.5 justify-center items-center px-3 py-1.5 rounded-full text-zinc-900 dark:text-zinc-100 hover:text-purple-600 transition-colors"
+    <header className="w-full bg-[#3B2418] dark:bg-[#23150E] border-b border-[#F2E8DA]/15 transition-colors">
+      <div
+        className="max-w-7xl mx-auto flex justify-between items-center h-[4.5rem]"
+        style={{ padding: '0 1.5rem' }}
+      >
+        <Link
+          href="/"
+          className="flex items-center group"
+          style={{ gap: '0.65rem' }}
         >
-          <Home className="w-4 h-4" /> Home
+          <PawPrint
+            className="text-[#8EC5FF] border-2 border-[#8EC5FF] rounded-full transition-transform group-hover:scale-105"
+            style={{ width: '2rem', height: '2rem', padding: '0.25rem' }}
+          />
+          <span className="font-[Fraunces] text-[1.35rem] font-bold text-[#F2E8DA] tracking-[-0.02em]">
+            PetNest
+          </span>
         </Link>
-        <Link 
-          href="/pets" 
-          className="text-zinc-500 dark:text-zinc-400 hover:text-purple-600 transition-colors flex items-center gap-1"
-        >
-          <Search className="w-4 h-4" /> All Pets
-        </Link>
-      </div>
 
-      <div className="flex items-center space-x-4">
-        <button 
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          className="p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
-          title="Toggle Theme"
-        >
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
+        <nav className="flex items-center text-sm font-medium" style={{ gap: '0.75rem' }}>
+          <Link
+            href="/"
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
+              pathname === '/'
+                ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
+                : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
+            }`}
+            style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
+          >
+            <Home style={{ width: '1rem', height: '1rem' }} />
+            <span>Home</span>
+          </Link>
 
-        {user ? (
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center space-x-2 focus:outline-none group"
-            >
-              <Image
-                src={user.avatarUrl || '/image_pgdFnZ.png'}
-                alt="User Profile"
-                className="w-8 h-8 rounded-full border border-purple-500 object-cover"
-                height={32}
-                width={32}
-              />
-              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-white">
-                {user.name}
-              </span>
-              <svg 
-                className={`w-4 h-4 text-zinc-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+          <Link
+            href="/pets"
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
+              pathname === '/pets'
+                ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
+                : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
+            }`}
+            style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
+          >
+            <Search style={{ width: '1rem', height: '1rem' }} />
+            <span>All Pets</span>
+          </Link>
+        </nav>
 
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#161b22] border border-zinc-200 dark:border-gray-800 rounded-md shadow-lg py-1 z-50">
-                <Link href="/profile" className="block px-4 py-2 text-sm text-zinc-700 dark:text-gray-300 hover:bg-zinc-100 dark:hover:bg-gray-800 hover:text-zinc-900 dark:hover:text-white">
-                  Your Profile
-                </Link>
-                <Link href="/settings" className="block px-4 py-2 text-sm text-zinc-700 dark:text-gray-300 hover:bg-zinc-100 dark:hover:bg-gray-800 hover:text-zinc-900 dark:hover:text-white">
-                  Settings
-                </Link>
-                <hr className="border-zinc-200 dark:border-gray-800 my-1" />
-                <button
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    onLogout();
-                  }}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-gray-800"
-                >
-                  Sign out
-                </button>
-              </div>
+        <div className="flex items-center" style={{ gap: '1rem' }}>
+          <button
+            type="button"
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10 rounded-full transition-colors cursor-pointer"
+            style={{ padding: '0.5rem' }}
+            title="Toggle Theme"
+            aria-label="Toggle Theme"
+          >
+            {isDarkMode ? (
+              <Sun className="text-[#8EC5FF]" style={{ width: '1.25rem', height: '1.25rem' }} />
+            ) : (
+              <Moon style={{ width: '1.25rem', height: '1.25rem' }} />
             )}
-          </div>
-        ) : (
-          <div className="flex items-center space-x-3">
-            <Link href="/login" className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-purple-600 transition-colors">
-              Log In
-            </Link>
-            
-            <Link href="/signup" className="px-4 py-1.5 text-sm font-medium bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors">
-              Sign Up
-            </Link>
-          </div>
-        )}
+          </button>
+
+          {/* {user ? ( */}
+          {2 < 1 ? (
+            // <div className="relative">
+            //   <button
+            //     type="button"
+            //     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            //     className="flex items-center focus:outline-none group cursor-pointer"
+            //     style={{ gap: '0.5rem' }}
+            //   >
+            //     <Image
+            //       src={user.avatarUrl || '/image_pgdFnZ.png'}
+            //       alt="User Profile"
+            //       className="rounded-full border-2 border-[#8EC5FF] object-cover"
+            //       style={{ width: '2rem', height: '2rem' }}
+            //       height={32}
+            //       width={32}
+            //     />
+            //     <span className="text-sm font-medium text-[#F2E8DA] group-hover:text-[#8EC5FF] transition-colors">
+            //       {user.name}
+            //     </span>
+            //     <svg
+            //       className={`text-[#F2E8DA]/70 transition-transform ${
+            //         isDropdownOpen ? 'rotate-180' : ''
+            //       }`}
+            //       style={{ width: '1rem', height: '1rem' }}
+            //       fill="none"
+            //       stroke="currentColor"
+            //       viewBox="0 0 24 24"
+            //     >
+            //       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            //     </svg>
+            //   </button>
+
+            //   {/* {isDropdownOpen && (
+            //     <div
+            //       className="absolute right-0 mt-2 w-48 bg-[#F9F4ED] dark:bg-[#2B1A11] border border-[#3B2418]/20 dark:border-[#F2E8DA]/15 rounded-xl shadow-lg z-50"
+            //       style={{ padding: '0.4rem 0' }}
+            //     >
+            //       <Link
+            //         href="/profile"
+            //         onClick={() => setIsDropdownOpen(false)}
+            //         className="block text-sm text-[#3B2418] dark:text-[#F2E8DA] hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] transition-colors"
+            //         style={{ padding: '0.5rem 1rem' }}
+            //       >
+            //         Your Profile
+            //       </Link>
+            //       <Link
+            //         href="/settings"
+            //         onClick={() => setIsDropdownOpen(false)}
+            //         className="block text-sm text-[#3B2418] dark:text-[#F2E8DA] hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] transition-colors"
+            //         style={{ padding: '0.5rem 1rem' }}
+            //       >
+            //         Settings
+            //       </Link>
+            //       <hr className="border-[#3B2418]/15 dark:border-[#F2E8DA]/15 my-1" />
+            //       <button
+            //         type="button"
+            //         onClick={() => {
+            //           setIsDropdownOpen(false);
+            //           onLogout?.();
+            //         }}
+            //         className="block w-full text-left text-sm font-medium text-red-600 dark:text-red-400 hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] transition-colors cursor-pointer"
+            //         style={{ padding: '0.5rem 1rem' }}
+            //       >
+            //         Sign out
+            //       </button>
+            //     </div>
+            //   )} */}
+            // </div>
+            <p>hello</p>
+          ) : (
+            <div className="flex items-center" style={{ gap: '1rem' }}>
+              <Link
+                href="/login"
+                className="text-sm font-medium text-[#F2E8DA]/90 hover:text-[#8EC5FF] whitespace-nowrap transition-colors"
+                style={{ padding: '0.4rem 0.5rem' }}
+              >
+                Log In
+              </Link>
+
+              <Link
+                href="/signup"
+                className="text-sm font-semibold bg-[#8EC5FF] hover:bg-[#73B6FF] text-[#3B2418] rounded-full whitespace-nowrap transition-colors"
+                style={{ padding: '0.45rem 1.15rem' }}
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </header>
   );
 }

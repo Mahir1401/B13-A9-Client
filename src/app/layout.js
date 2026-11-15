@@ -23,7 +23,6 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
         <Navbar />
-        {/* Main wrapper handles full width and expanding height */}
         <main className="w-full flex-1 flex flex-col">
           {children}
         </main>

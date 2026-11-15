@@ -1,2 +1,210 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+
+/* =========================================
+   1. Color Palette & Typography Variables
+   ========================================= */
+:root {
+  /* Core Palette from Image */
+  --color-brown: #3B2418;
+  --color-cream: #F2E8DA;
+  --color-baby-blue: #8EC5FF;
+
+  /* Derived Tints & Accents */
+  --color-cream-light: #F9F4ED;      /* Subtle card/review backgrounds */
+  --color-baby-blue-hover: #73B6FF;  /* Slightly darker blue for button hover */
+  --color-brown-muted: rgba(59, 36, 24, 0.7);
+  --color-border: rgba(59, 36, 24, 0.2);
+
+  /* Typography */
+  --font-serif: 'Georgia', 'Playfair Display', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* =========================================
+   2. Base Styles & Reset
+   ========================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================
+   3. Top Announcement Bar & Navbar
+   ========================================= */
+.announcement-bar {
+  background-color: var(--color-brown);
+  color: var(--color-cream);
+  text-align: center;
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+  letter-spacing: 0.03em;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 5%;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.navbar .brand-logo {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-brown);
+  text-decoration: none;
+}
+
+.navbar .nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.navbar a {
+  color: var(--color-brown);
+  text-decoration: none;
+}
+
+/* =========================================
+   4. Product Layout & Typography
+   ========================================= */
+.product-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 5%;
+}
+
+.product-image-card {
+  background-color: var(--color-cream-light);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-image-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Pill Badges (e.g., "Bestseller", "Back in stock") */
+.badge {
+  display: inline-block;
+  background-color: var(--color-cream-light);
+  color: var(--color-brown);
+  border: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+
+.product-title {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.product-description {
+  color: var(--color-brown-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* =========================================
+   5. Variant Selectors & Baby Blue CTA
+   ========================================= */
+.size-selector {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.size-option {
+  flex: 1;
+  background-color: transparent;
+  color: var(--color-brown);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.65rem;
+  text-align: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.size-option.active,
+.size-option:hover {
+  border-color: var(--color-brown);
+  background-color: var(--color-cream-light);
+  font-weight: 600;
+}
+
+/* Primary Add to Bag Button */
+.btn-primary {
+  width: 100%;
+  background-color: var(--color-baby-blue);
+  color: var(--color-brown);
+  border: none;
+  border-radius: 999px;
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-baby-blue-hover);
+}
+
+.btn-primary:active {
+  transform: scale(0.99);
+}
+
+/* =========================================
+   6. Review Highlight Card
+   ========================================= */
+.review-box {
+  background-color: var(--color-cream-light);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+}
+
+/* =========================================
+   7. Mobile Responsiveness
+   ========================================= */
+@media (max-width: 768px) {
+  .product-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
