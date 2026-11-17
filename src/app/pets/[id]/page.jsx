@@ -1,4 +1,3 @@
-import PetCard from '@/components/PetCard';
 import PetDetails from '@/components/PetDetails';
 import { getPetById } from '@/lib/data';
 import React from 'react';

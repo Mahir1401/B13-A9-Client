@@ -22,7 +22,7 @@ export default function Navbar() {
   return (
     <header className="w-full bg-[#3B2418] dark:bg-[#23150E] border-b border-[#F2E8DA]/15 transition-colors">
       <div
-        className="max-w-7xl mx-auto flex justify-between items-center h-[4.5rem]"
+        className="w-full flex justify-between items-center h-[4.5rem]"
         style={{ padding: '0 1.5rem' }}
       >
         <Link
@@ -42,11 +42,10 @@ export default function Navbar() {
         <nav className="flex items-center text-sm font-medium" style={{ gap: '0.75rem' }}>
           <Link
             href="/"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
-              pathname === '/'
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/'
                 ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
                 : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-            }`}
+              }`}
             style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
           >
             <Home style={{ width: '1rem', height: '1rem' }} />
@@ -55,11 +54,10 @@ export default function Navbar() {
 
           <Link
             href="/pets"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
-              pathname === '/pets'
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/pets'
                 ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
                 : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-            }`}
+              }`}
             style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
           >
             <Search style={{ width: '1rem', height: '1rem' }} />
@@ -164,7 +162,7 @@ export default function Navbar() {
               </Link>
 
               <Link
-                href="/signup"
+                href="/register"
                 className="text-sm font-semibold bg-[#8EC5FF] hover:bg-[#73B6FF] text-[#3B2418] rounded-full whitespace-nowrap transition-colors"
                 style={{ padding: '0.45rem 1.15rem' }}
               >
