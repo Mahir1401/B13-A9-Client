@@ -3,6 +3,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import Footer from "@/components/Footer";
+import { Toaster } from "react-hot-toast";
+import DashboardSidebar from "@/components/DashboardSidebar";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -30,6 +32,7 @@ export default function RootLayout({ children }) {
           {children}
         </main>
         <Footer />
+        <Toaster />
       </PageTransition>
       </body>
     </html>

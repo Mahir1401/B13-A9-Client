@@ -1,5 +1,5 @@
 import PetCard from "@/components/PetCard";
-import { getAllPets } from "@/lib/data";
+import { getAllPets } from "@/lib/pets/data";
 
 const Pets = async () => {
   const pets = await getAllPets();

@@ -1,37 +1,38 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
 
-export default function LoginForm({ onLoginSuccess }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+import React from "react";
+import Link from "next/link";
+import { Button, FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import { LogIn } from "lucide-react";
+import { authClient, signIn } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+export default function Login() {
+  const router = useRouter();
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.currentTarget);
+  const { email, password } = Object.fromEntries(formData.entries());
 
-    try {
-      // Replace this block with your actual API call (e.g., fetch or axios)
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+  const { data, error } = await signIn.email({
+    email,
+    password,
+  });
 
-      if (!response.ok) {
-        throw new Error('Invalid email or password.');
-      }
+  const { data:tokenData,  } = await authClient.token()
 
-      const data = await response.json();
-      if (onLoginSuccess) onLoginSuccess(data);
-    } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+  if (error) {
+    toast.error("Invalid email or password");
+    return;
+  }
+
+  toast.success("Logged in successfully!");
+  router.push("/");
+};
+
+  
 
   return (
     <section className="min-h-screen w-full flex items-center justify-center bg-[#F2E8DA] dark:bg-[#23150E] p-6">
@@ -48,12 +49,12 @@ export default function LoginForm({ onLoginSuccess }) {
             style={{
               backgroundColor: "#F2E8DA",
               color: "#3B2418",
-              padding: "0.3rem 0.9rem",
+              padding: "0.3rem 1rem",
               marginBottom: "0.75rem",
             }}
-            className="inline-block rounded-full text-lg font-bold border border-[#3B2418]/20"
+            className="inline-block rounded-full text-sm font-bold border border-[#3B2418]/20"
           >
-            Welcome <span className="text-[#8EC5FF]">Back</span>
+            Welcome <strong style={{ color: "#8EC5FF" }}>Back</strong>
           </p>
 
           <h2
@@ -64,94 +65,105 @@ export default function LoginForm({ onLoginSuccess }) {
           </h2>
         </div>
 
-        {error && (
-          <div
-            role="alert"
-            style={{
-              color: "#991B1B",
-              backgroundColor: "#FEE2E2",
-              border: "1px solid rgba(153, 27, 27, 0.25)",
-              padding: "0.75rem 1rem",
-              marginBottom: "1.25rem",
+        <Form onSubmit={handleLogin} className="flex flex-col gap-5">
+          <TextField
+            isRequired
+            name="email"
+            type="email"
+            validate={(value) => {
+              if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+                return "Please enter a valid email address";
+              }
+              return null;
             }}
-            className="rounded-xl text-xs font-medium text-center"
+            className="flex flex-col gap-1.5"
           >
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="flex flex-col">
-          <div style={{ marginBottom: "1.15rem" }} className="flex flex-col">
-            <label
-              htmlFor="email"
-              style={{ marginBottom: "0.4rem", color: "#3B2418" }}
+            <Label
+              style={{ color: "#3B2418" }}
               className="text-xs font-semibold uppercase tracking-wider opacity-80"
             >
               Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            </Label>
+            <Input
               placeholder="you@example.com"
-              required
               autoComplete="email"
               style={{
                 padding: "0.7rem 1rem",
                 backgroundColor: "#F2E8DA",
                 color: "#3B2418",
                 border: "1px solid rgba(59, 36, 24, 0.25)",
-                boxSizing: "border-box",
               }}
-              className="w-full rounded-xl placeholder-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
+              className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
             />
-          </div>
+            <FieldError className="text-xs text-red-600 dark:text-red-400" />
+          </TextField>
 
-          <div style={{ marginBottom: "1.75rem" }} className="flex flex-col">
-            <label
-              htmlFor="password"
-              style={{ marginBottom: "0.4rem", color: "#3B2418" }}
+          <TextField
+            isRequired
+            minLength={6}
+            name="password"
+            type="password"
+            validate={(value) => {
+              if (value.length < 6) {
+                return "Password must be at least 6 characters";
+              }
+              return null;
+            }}
+            className="flex flex-col gap-1.5"
+          >
+            <Label
+              style={{ color: "#3B2418" }}
               className="text-xs font-semibold uppercase tracking-wider opacity-80"
             >
               Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+            </Label>
+            <Input
               placeholder="••••••••"
-              required
               autoComplete="current-password"
               style={{
                 padding: "0.7rem 1rem",
                 backgroundColor: "#F2E8DA",
                 color: "#3B2418",
                 border: "1px solid rgba(59, 36, 24, 0.25)",
-                boxSizing: "border-box",
               }}
-              className="w-full rounded-xl placeholder-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
+              className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
             />
-          </div>
+            <FieldError className="text-xs text-red-600 dark:text-red-400" />
+          </TextField>
 
-          <button
+          <Button
             type="submit"
-            disabled={isLoading}
             style={{
               backgroundColor: "#8EC5FF",
               color: "#3B2418",
               padding: "0.85rem 1.5rem",
-              opacity: isLoading ? 0.65 : 1,
-              cursor: isLoading ? "not-allowed" : "pointer",
+              marginTop: "0.5rem",
+              cursor: "pointer",
             }}
-            className="w-full font-semibold text-sm rounded-full hover:opacity-90 active:scale-[0.99] transition-all shadow-xs"
+            className="w-full flex items-center justify-center gap-2 font-semibold text-sm rounded-full hover:opacity-90 active:scale-[0.99] transition-all shadow-xs"
           >
-            {isLoading ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
+            <LogIn className="w-4 h-4" />
+            Sign In
+          </Button>
+        </Form>
+
+        <p
+          style={{
+            marginTop: "1.5rem",
+            color: "rgba(59, 36, 24, 0.75)",
+          }}
+          className="text-xs text-center"
+        >
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            style={{ color: "#3B2418" }}
+            className="font-semibold underline hover:opacity-80"
+          >
+            Create one
+          </Link>
+        </p>
       </div>
     </section>
-
   );
 }

@@ -1,17 +1,44 @@
 'use client';
-import { Home, Moon, PawPrint, Search, Sun } from 'lucide-react';
+
+import { signOut, useSession } from '@/lib/auth-client';
+import { Button, Dropdown, Header, Label, Separator } from '@heroui/react';
+import {
+  Home,
+  Moon,
+  PawPrint,
+  Search,
+  Sun,
+  ChevronDown,
+  LayoutGrid,
+  LogOut,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
 export default function Navbar() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
   const pathname = usePathname();
+  const router = useRouter();
+
+  const { data: session, isPending } = useSession();
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    const root = document.documentElement;
+
     if (isDarkMode) {
       root.classList.add('dark');
     } else {
@@ -19,21 +46,26 @@ export default function Navbar() {
     }
   }, [isDarkMode]);
 
+  const handleMenuAction = (key) => {
+    if (key === 'dashboard') {
+      router.push('/dashboard');
+    } else if (key === 'logout') {
+      handleLogout();
+    }
+  };
+
   return (
     <header className="w-full bg-[#3B2418] dark:bg-[#23150E] border-b border-[#F2E8DA]/15 transition-colors">
       <div
         className="w-full flex justify-between items-center h-[4.5rem]"
         style={{ padding: '0 1.5rem' }}
       >
-        <Link
-          href="/"
-          className="flex items-center group"
-          style={{ gap: '0.65rem' }}
-        >
+        <Link href="/" className="flex items-center group" style={{ gap: '0.65rem' }}>
           <PawPrint
             className="text-[#8EC5FF] border-2 border-[#8EC5FF] rounded-full transition-transform group-hover:scale-105"
             style={{ width: '2rem', height: '2rem', padding: '0.25rem' }}
           />
+
           <span className="font-[Fraunces] text-[1.35rem] font-bold text-[#F2E8DA] tracking-[-0.02em]">
             PetNest
           </span>
@@ -42,25 +74,27 @@ export default function Navbar() {
         <nav className="flex items-center text-sm font-medium" style={{ gap: '0.75rem' }}>
           <Link
             href="/"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/'
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
+              pathname === '/'
                 ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
                 : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-              }`}
+            }`}
             style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
           >
-            <Home style={{ width: '1rem', height: '1rem' }} />
+            <Home size={16} />
             <span>Home</span>
           </Link>
 
           <Link
             href="/pets"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/pets'
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
+              pathname === '/pets'
                 ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
                 : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-              }`}
+            }`}
             style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
           >
-            <Search style={{ width: '1rem', height: '1rem' }} />
+            <Search size={16} />
             <span>All Pets</span>
           </Link>
         </nav>
@@ -75,82 +109,84 @@ export default function Navbar() {
             aria-label="Toggle Theme"
           >
             {isDarkMode ? (
-              <Sun className="text-[#8EC5FF]" style={{ width: '1.25rem', height: '1.25rem' }} />
+              <Sun className="text-[#8EC5FF]" size={20} />
             ) : (
-              <Moon style={{ width: '1.25rem', height: '1.25rem' }} />
+              <Moon size={20} />
             )}
           </button>
 
-          {/* {user ? ( */}
-          {2 < 1 ? (
-            // <div className="relative">
-            //   <button
-            //     type="button"
-            //     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            //     className="flex items-center focus:outline-none group cursor-pointer"
-            //     style={{ gap: '0.5rem' }}
-            //   >
-            //     <Image
-            //       src={user.avatarUrl || '/image_pgdFnZ.png'}
-            //       alt="User Profile"
-            //       className="rounded-full border-2 border-[#8EC5FF] object-cover"
-            //       style={{ width: '2rem', height: '2rem' }}
-            //       height={32}
-            //       width={32}
-            //     />
-            //     <span className="text-sm font-medium text-[#F2E8DA] group-hover:text-[#8EC5FF] transition-colors">
-            //       {user.name}
-            //     </span>
-            //     <svg
-            //       className={`text-[#F2E8DA]/70 transition-transform ${
-            //         isDropdownOpen ? 'rotate-180' : ''
-            //       }`}
-            //       style={{ width: '1rem', height: '1rem' }}
-            //       fill="none"
-            //       stroke="currentColor"
-            //       viewBox="0 0 24 24"
-            //     >
-            //       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-            //     </svg>
-            //   </button>
+          {isPending ? (
+            <div className="w-24 h-8 animate-pulse bg-[#F2E8DA]/10 rounded-full" />
+          ) : user ? (
+            <div className="relative">
+              <Dropdown>
+                <Button
+                  aria-label="Menu"
+                  variant="ghost"
+                  className="flex items-center gap-2 bg-transparent p-0 focus:outline-none group cursor-pointer"
+                >
+                  <Image
+                    src={user.image || '/image_pgdFnZ.png'}
+                    alt="User Profile"
+                    className="rounded-full border-2 border-[#8EC5FF] object-cover"
+                    style={{ width: '2rem', height: '2rem' }}
+                    height={32}
+                    width={32}
+                    unoptimized={user.image?.startsWith('http')}
+                  />
 
-            //   {/* {isDropdownOpen && (
-            //     <div
-            //       className="absolute right-0 mt-2 w-48 bg-[#F9F4ED] dark:bg-[#2B1A11] border border-[#3B2418]/20 dark:border-[#F2E8DA]/15 rounded-xl shadow-lg z-50"
-            //       style={{ padding: '0.4rem 0' }}
-            //     >
-            //       <Link
-            //         href="/profile"
-            //         onClick={() => setIsDropdownOpen(false)}
-            //         className="block text-sm text-[#3B2418] dark:text-[#F2E8DA] hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] transition-colors"
-            //         style={{ padding: '0.5rem 1rem' }}
-            //       >
-            //         Your Profile
-            //       </Link>
-            //       <Link
-            //         href="/settings"
-            //         onClick={() => setIsDropdownOpen(false)}
-            //         className="block text-sm text-[#3B2418] dark:text-[#F2E8DA] hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] transition-colors"
-            //         style={{ padding: '0.5rem 1rem' }}
-            //       >
-            //         Settings
-            //       </Link>
-            //       <hr className="border-[#3B2418]/15 dark:border-[#F2E8DA]/15 my-1" />
-            //       <button
-            //         type="button"
-            //         onClick={() => {
-            //           setIsDropdownOpen(false);
-            //           onLogout?.();
-            //         }}
-            //         className="block w-full text-left text-sm font-medium text-red-600 dark:text-red-400 hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] transition-colors cursor-pointer"
-            //         style={{ padding: '0.5rem 1rem' }}
-            //       >
-            //         Sign out
-            //       </button>
-            //     </div>
-            //   )} */}
-            // </div>
-            <p>hello</p>
+                  <span className="text-sm font-medium text-[#F2E8DA] group-hover:text-[#8EC5FF] transition-colors">
+                    {user.name}
+                  </span>
+
+                  <ChevronDown
+                    className="text-[#F2E8DA]/70 transition-transform duration-200 group-aria-expanded:rotate-180 group-data-[open=true]:rotate-180"
+                    size={16}
+                  />
+                </Button>
+
+                <Dropdown.Popover
+                  placement="bottom end"
+                  className="min-w-[220px] rounded-xl bg-[#F9F4ED] dark:bg-[#2B1A11] border border-[#3B2418]/15 dark:border-[#F2E8DA]/15 shadow-lg p-1.5"
+                >
+                  <Dropdown.Menu onAction={handleMenuAction} aria-label="User menu">
+                    <Dropdown.Section>
+                      <Header className="px-2.5 py-2 flex flex-col gap-0.5">
+                        <span className="text-sm font-semibold text-[#3B2418] dark:text-[#F2E8DA] leading-tight">
+                          {user.name}
+                        </span>
+                        <span className="text-xs font-normal text-[#3B2418]/65 dark:text-[#F2E8DA]/65 truncate">
+                          {user.email}
+                        </span>
+                      </Header>
+                    </Dropdown.Section>
+
+                    <Separator className="my-1 bg-[#3B2418]/10 dark:bg-[#F2E8DA]/10" />
+
+                    <Dropdown.Item
+                      id="dashboard"
+                      textValue="Dashboard"
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-[#3B2418] dark:text-[#F2E8DA] hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] cursor-pointer"
+                    >
+                      <LayoutGrid size={16} className="text-[#3B2418]/75 dark:text-[#F2E8DA]/75" />
+                      <Label>Dashboard</Label>
+                    </Dropdown.Item>
+
+                    <Separator className="my-1 bg-[#3B2418]/10 dark:bg-[#F2E8DA]/10" />
+
+                    <Dropdown.Item
+                      id="logout"
+                      textValue="Logout"
+                      variant="danger"
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-red-600 dark:text-red-400 hover:bg-red-500/10 cursor-pointer"
+                    >
+                      <LogOut size={16} />
+                      <Label>Logout</Label>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown.Popover>
+              </Dropdown>
+            </div>
           ) : (
             <div className="flex items-center" style={{ gap: '1rem' }}>
               <Link
