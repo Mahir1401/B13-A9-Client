@@ -4,15 +4,21 @@ import { NextResponse } from 'next/server';
 
 export async function proxy(request) {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
-  if(!session && !session?.user){
-      return NextResponse.redirect(new URL('/', request.url))
+
+  if (!session?.user) {
+    return NextResponse.redirect(new URL('/', request.url));
   }
+
+  return NextResponse.next();
 }
-
-
 
 export const config = {
-  matcher: '/pets/:id',
-}
+  matcher: [
+    '/pets/:id',
+    '/add-pet/:path*',
+    '/listings/:path*',
+    '/requests/:path*',
+  ],
+};

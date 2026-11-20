@@ -11,6 +11,8 @@ import {
   ChevronDown,
   LayoutGrid,
   LogOut,
+  LogIn,
+  Rocket,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -48,7 +50,7 @@ export default function Navbar() {
 
   const handleMenuAction = (key) => {
     if (key === 'dashboard') {
-      router.push('/dashboard');
+      router.push('/requests');
     } else if (key === 'logout') {
       handleLogout();
     }
@@ -74,11 +76,10 @@ export default function Navbar() {
         <nav className="flex items-center text-sm font-medium" style={{ gap: '0.75rem' }}>
           <Link
             href="/"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
-              pathname === '/'
-                ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
-                : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-            }`}
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/'
+              ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
+              : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
+              }`}
             style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
           >
             <Home size={16} />
@@ -87,11 +88,10 @@ export default function Navbar() {
 
           <Link
             href="/pets"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${
-              pathname === '/pets'
-                ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
-                : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-            }`}
+            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/pets'
+              ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
+              : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
+              }`}
             style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
           >
             <Search size={16} />
@@ -128,6 +128,7 @@ export default function Navbar() {
                   <Image
                     src={user.image || '/image_pgdFnZ.png'}
                     alt="User Profile"
+                    referrerPolicy="no-referrer"
                     className="rounded-full border-2 border-[#8EC5FF] object-cover"
                     style={{ width: '2rem', height: '2rem' }}
                     height={32}
@@ -191,18 +192,26 @@ export default function Navbar() {
             <div className="flex items-center" style={{ gap: '1rem' }}>
               <Link
                 href="/login"
-                className="text-sm font-medium text-[#F2E8DA]/90 hover:text-[#8EC5FF] whitespace-nowrap transition-colors"
-                style={{ padding: '0.4rem 0.5rem' }}
+                style={{
+                  padding: '0.4rem 0.6rem',
+                  color: 'rgba(242, 232, 218, 0.9)',
+                }}
+                className="flex items-center gap-2 text-sm font-medium hover:opacity-80 whitespace-nowrap transition-opacity"
               >
-                Log In
+                <LogIn className="w-4 h-4" style={{ color: '#8EC5FF' }} />
+                Login
               </Link>
-
               <Link
                 href="/register"
-                className="text-sm font-semibold bg-[#8EC5FF] hover:bg-[#73B6FF] text-[#3B2418] rounded-full whitespace-nowrap transition-colors"
-                style={{ padding: '0.45rem 1.15rem' }}
+                style={{
+                  padding: '0.5rem 1.35rem',
+                  backgroundColor: '#8EC5FF',
+                  color: '#3B2418',
+                }}
+                className="flex items-center gap-2 text-sm font-semibold hover:opacity-90 active:scale-[0.99] rounded-full whitespace-nowrap transition-all shadow-xs"
               >
-                Sign Up
+                <Rocket className="w-4 h-4" style={{ color: '#3B2418' }} />
+                Get Started
               </Link>
             </div>
           )}

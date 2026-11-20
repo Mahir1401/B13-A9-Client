@@ -10,14 +10,21 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
-  emailAndPassword: {    
-        enabled: true
+  emailAndPassword: {
+    	enabled: true,
+    	autoSignIn: false
   },
+   socialProviders: {
+        google: { 
+            clientId: process.env.GOOGLE_CLIENT_ID, 
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET, 
+        }, 
+    },
   session: {
     cookieCache: {
       enabled: true,
       strategy: "jwt",
-      maxAge: 5 * 24 * 60 * 60 // 5 days in seconds
+      maxAge: 5 * 24 * 60 * 60
     }
   },
   plugins: [

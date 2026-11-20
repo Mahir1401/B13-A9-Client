@@ -7,17 +7,17 @@ import { usePathname } from 'next/navigation';
 const menuItems = [
   {
     label: 'My Requests',
-    href: '/dashboard/requests',
+    href: '/requests',
     icon: FileText,
   },
   {
     label: 'Add Pet',
-    href: '/dashboard/add-pet',
+    href: '/add-pet',
     icon: Plus,
   },
   {
     label: 'My Listings',
-    href: '/dashboard/listings',
+    href: '/listings',
     icon: Heart,
   },
 ];
@@ -26,12 +26,18 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 shrink-0 min-h-[calc(100vh-4.5rem)] bg-[#F9F4ED] dark:bg-[#161D2F] border-r border-[#3B2418]/15 dark:border-white/10 p-4 transition-colors">
-      <p className="px-3 mb-3 text-xs font-semibold uppercase tracking-wider text-[#3B2418]/60 dark:text-slate-400">
+    <aside
+      style={{ padding: '1.5rem 1rem' }}
+      className="w-64 shrink-0 min-h-[calc(100vh-4.5rem)] bg-[#F9F4ED] dark:bg-[#2B1A11] border-r border-[#3B2418]/15 dark:border-[#F2E8DA]/15 transition-colors"
+    >
+      <p
+        style={{ padding: '0 0.85rem', marginBottom: '0.85rem' }}
+        className="text-xs font-semibold uppercase tracking-wider text-[#3B2418]/65 dark:text-[#F2E8DA]/65"
+      >
         Menu
       </p>
 
-      <nav className="flex flex-col gap-1.5">
+      <nav className="flex flex-col gap-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -40,14 +46,19 @@ export default function DashboardSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              style={{
+                padding: '0.65rem 1rem',
+                backgroundColor: isActive ? '#8EC5FF' : 'transparent',
+                color: isActive ? '#3B2418' : undefined,
+              }}
+              className={`flex items-center gap-3 rounded-full text-sm transition-colors ${
                 isActive
-                  ? 'bg-[#F47258] text-white shadow-sm'
-                  : 'text-[#3B2418]/80 dark:text-slate-300 hover:bg-[#F47258]/15 dark:hover:bg-[#4A2535] hover:text-[#3B2418] dark:hover:text-white'
+                  ? 'font-semibold shadow-xs'
+                  : 'font-medium text-[#3B2418]/80 dark:text-[#F2E8DA]/80 hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] hover:text-[#3B2418] dark:hover:text-[#F2E8DA]'
               }`}
             >
               <Icon size={18} />
-              <span>{item.label}</span>
+              <p className="m-0">{item.label}</p>
             </Link>
           );
         })}
