@@ -4,8 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import RequestFormModal from "./RequestFormModal";
-import { authClient } from "@/lib/auth-client";
 
 export default function PetCard({ 
   pet, 
@@ -15,8 +13,6 @@ export default function PetCard({
   const [isHovered, setIsHovered] = useState(false);
   const isAvailable = pet.status === "Available";
 
-  const { data: sessionData } = authClient.useSession();
-  const user = sessionData?.user;
 
   const getSpeciesEmoji = (sp = "") => {
     switch (sp.toLowerCase()) {
@@ -222,7 +218,6 @@ export default function PetCard({
           >
             Meet {pet.name}
           </Link>
-          <RequestFormModal pet={pet} user={user} />
         </div>
       </div>
     </motion.div>
