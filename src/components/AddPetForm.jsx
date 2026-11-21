@@ -13,6 +13,10 @@ import {
   TextField,
 } from "@heroui/react";
 import { PawPrint, Plus, RotateCcw } from "lucide-react";
+import { authClient, useSession } from "@/lib/auth-client";
+import { createPet } from "@/lib/pets/action";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const speciesOptions = [
   { id: "dog", label: "Dog" },
@@ -23,8 +27,8 @@ const speciesOptions = [
 ];
 
 const genderOptions = [
-  { id: "male", label: "Male" },
-  { id: "female", label: "Female" },
+  { id: "Male", label: "Male" },
+  { id: "Female", label: "Female" },
 ];
 
 const vaccinationOptions = [
@@ -40,13 +44,42 @@ const healthOptions = [
 ];
 
 export default function AddPetListingSection() {
-  const [formData, setFormData] = useState(null);
+  const router = useRouter();
+  const { data: session } = useSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    setFormData(data);
-    console.log("Pet Listing Data:", data);
+    setIsSubmitting(true);
+
+    try {
+      const rawData = Object.fromEntries(new FormData(e.currentTarget));
+      const { data: tokenData } = await authClient.token();
+
+      const petPayload = {
+        name: rawData.petName,
+        species: rawData.species,
+        breed: rawData.breed,
+        age: Number(rawData.age) || 0,
+        gender: rawData.gender,
+        image: rawData.imageUrl,
+        healthStatus: rawData.healthStatus,
+        vaccinationStatus: rawData.vaccinationStatus,
+        location: rawData.location,
+        fee: Number(rawData.adoptionFee) || 0,
+        bio: rawData.description,
+        ownerEmail: session?.user?.email || rawData.ownerEmail,
+      };
+
+      await createPet(petPayload, tokenData?.token);
+      toast.success("Pet listing added successfully!");
+      router.push("/listings");
+      router.refresh();
+    } catch (error) {
+      toast.error(error.message || "Failed to add pet listing");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const fieldInputStyle = {
@@ -135,11 +168,7 @@ export default function AddPetListingSection() {
             </h2>
           </div>
 
-          <Form
-            className="flex flex-col gap-5"
-            onSubmit={onSubmit}
-            onReset={() => setFormData(null)}
-          >
+          <Form className="flex flex-col gap-5" onSubmit={onSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
               <TextField isRequired name="petName" className="flex flex-col gap-1.5">
                 <Label
@@ -169,20 +198,20 @@ export default function AddPetListingSection() {
                   Species
                 </Label>
                 <Select.Trigger
-  style={fieldInputStyle}
-  className="w-full rounded-xl flex items-center justify-between text-sm"
->
-  <Select.Value style={{ color: "#3B2418" }} />
-  <Select.Indicator
-    style={{
-      color: "#3B2418",
-      position: "static",
-      display: "inline-flex",
-      alignItems: "center",
-      transform: "none",
-    }}
-  />
-</Select.Trigger>
+                  style={fieldInputStyle}
+                  className="w-full rounded-xl flex items-center justify-between text-sm"
+                >
+                  <Select.Value style={{ color: "#3B2418" }} />
+                  <Select.Indicator
+                    style={{
+                      color: "#3B2418",
+                      position: "static",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      transform: "none",
+                    }}
+                  />
+                </Select.Trigger>
 
                 <Select.Popover
                   style={{
@@ -210,7 +239,7 @@ export default function AddPetListingSection() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-              <TextField name="breed" className="flex flex-col gap-1.5">
+              <TextField isRequired name="breed" className="flex flex-col gap-1.5">
                 <Label
                   style={labelStyle}
                   className="text-xs font-semibold uppercase tracking-wider opacity-80"
@@ -222,9 +251,10 @@ export default function AddPetListingSection() {
                   style={fieldInputStyle}
                   className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30"
                 />
+                <FieldError className="text-xs text-red-600" />
               </TextField>
 
-              <TextField name="age" type="number" className="flex flex-col gap-1.5">
+              <TextField isRequired name="age" type="number" className="flex flex-col gap-1.5">
                 <Label
                   style={labelStyle}
                   className="text-xs font-semibold uppercase tracking-wider opacity-80"
@@ -238,11 +268,13 @@ export default function AddPetListingSection() {
                   style={fieldInputStyle}
                   className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30"
                 />
+                <FieldError className="text-xs text-red-600" />
               </TextField>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
               <Select
+                isRequired
                 name="gender"
                 placeholder="Select gender"
                 className="flex flex-col gap-1.5"
@@ -252,22 +284,22 @@ export default function AddPetListingSection() {
                   className="text-xs font-semibold uppercase tracking-wider opacity-80"
                 >
                   Gender
-                </Label>
+                </Label>                        
                 <Select.Trigger
-  style={fieldInputStyle}
-  className="w-full rounded-xl flex items-center justify-between text-sm"
->
-  <Select.Value style={{ color: "#3B2418" }} />
-  <Select.Indicator
-    style={{
-      color: "#3B2418",
-      position: "static",
-      display: "inline-flex",
-      alignItems: "center",
-      transform: "none",
-    }}
-  />
-</Select.Trigger>
+                  style={fieldInputStyle}
+                  className="w-full rounded-xl flex items-center justify-between text-sm"
+                >
+                  <Select.Value style={{ color: "#3B2418" }} />
+                  <Select.Indicator
+                    style={{
+                      color: "#3B2418",
+                      position: "static",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      transform: "none",
+                    }}
+                  />
+                </Select.Trigger>
 
                 <Select.Popover
                   style={{
@@ -290,9 +322,11 @@ export default function AddPetListingSection() {
                     ))}
                   </ListBox>
                 </Select.Popover>
+                <FieldError className="text-xs text-red-600" />
               </Select>
 
               <Select
+                isRequired
                 name="vaccinationStatus"
                 placeholder="Select status"
                 className="flex flex-col gap-1.5"
@@ -303,21 +337,21 @@ export default function AddPetListingSection() {
                 >
                   Vaccination Status
                 </Label>
-              <Select.Trigger
-  style={fieldInputStyle}
-  className="w-full rounded-xl flex items-center justify-between text-sm"
->
-  <Select.Value style={{ color: "#3B2418" }} />
-  <Select.Indicator
-    style={{
-      color: "#3B2418",
-      position: "static",
-      display: "inline-flex",
-      alignItems: "center",
-      transform: "none",
-    }}
-  />
-</Select.Trigger>
+                <Select.Trigger
+                  style={fieldInputStyle}
+                  className="w-full rounded-xl flex items-center justify-between text-sm"
+                >
+                  <Select.Value style={{ color: "#3B2418" }} />
+                  <Select.Indicator
+                    style={{
+                      color: "#3B2418",
+                      position: "static",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      transform: "none",
+                    }}
+                  />
+                </Select.Trigger>
 
                 <Select.Popover
                   style={{
@@ -340,10 +374,11 @@ export default function AddPetListingSection() {
                     ))}
                   </ListBox>
                 </Select.Popover>
+                <FieldError className="text-xs text-red-600" />
               </Select>
             </div>
 
-            <TextField name="imageUrl" type="url" className="flex flex-col gap-1.5">
+            <TextField isRequired name="imageUrl" type="url" className="flex flex-col gap-1.5">
               <Label
                 style={labelStyle}
                 className="text-xs font-semibold uppercase tracking-wider opacity-80"
@@ -372,20 +407,20 @@ export default function AddPetListingSection() {
                   Health Status
                 </Label>
                 <Select.Trigger
-  style={fieldInputStyle}
-  className="w-full rounded-xl flex items-center justify-between text-sm"
->
-  <Select.Value style={{ color: "#3B2418" }} />
-  <Select.Indicator
-    style={{
-      color: "#3B2418",
-      position: "static",
-      display: "inline-flex",
-      alignItems: "center",
-      transform: "none",
-    }}
-  />
-</Select.Trigger>
+                  style={fieldInputStyle}
+                  className="w-full rounded-xl flex items-center justify-between text-sm"
+                >
+                  <Select.Value style={{ color: "#3B2418" }} />
+                  <Select.Indicator
+                    style={{
+                      color: "#3B2418",
+                      position: "static",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      transform: "none",
+                    }}
+                  />
+                </Select.Trigger>
 
                 <Select.Popover
                   style={{
@@ -450,7 +485,8 @@ export default function AddPetListingSection() {
               <TextField
                 name="ownerEmail"
                 type="email"
-                defaultValue="123alarafat@gmail.com"
+                isReadOnly
+                value={session?.user?.email || ""}
                 className="flex flex-col gap-1.5"
               >
                 <Label
@@ -460,14 +496,15 @@ export default function AddPetListingSection() {
                   Owner Email
                 </Label>
                 <Input
+                  readOnly
                   style={fieldInputStyle}
-                  className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30"
+                  className="w-full rounded-xl opacity-80 text-sm focus:outline-none"
                 />
               </TextField>
             </div>
 
             <TextField isRequired name="description" className="flex flex-col gap-1.5">
-              <Label
+                            <Label
                 style={labelStyle}
                 className="text-xs font-semibold uppercase tracking-wider opacity-80"
               >
@@ -503,6 +540,7 @@ export default function AddPetListingSection() {
 
               <Button
                 type="submit"
+                isDisabled={isSubmitting}
                 style={{
                   backgroundColor: "#8EC5FF",
                   color: "#3B2418",
@@ -511,7 +549,7 @@ export default function AddPetListingSection() {
                 className="w-full inline-flex items-center justify-center gap-2 font-semibold text-sm rounded-full hover:opacity-90 active:scale-[0.99] transition-all cursor-pointer shadow-xs"
               >
                 <Plus className="w-4 h-4" />
-                Publish Listing
+                {isSubmitting ? "Publishing..." : "Publish Listing"}
               </Button>
             </div>
           </Form>
@@ -520,4 +558,5 @@ export default function AddPetListingSection() {
     </section>
   );
 }
+
 

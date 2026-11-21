@@ -1,40 +1,42 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { Button, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { LogIn } from "lucide-react";
 import { authClient, signIn } from "@/lib/auth-client";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Login() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const { email, password } = Object.fromEntries(formData.entries());
 
-    const { data, error } = await signIn.email({
+    const { error } = await signIn.email({
       email,
       password,
     });
 
-    const { data: tokenData } = await authClient.token();
-
     if (error) {
-      toast.error("Invalid email or password");
+      toast.error(error.message || "Invalid email or password");
       return;
     }
 
+    await authClient.token();
     toast.success("Logged in successfully!");
-    router.push("/");
+    router.push(callbackUrl);
   };
 
   const handleGoogleSignin = async () => {
     const { error } = await signIn.social({
       provider: "google",
+      callbackURL: callbackUrl,
     });
 
     if (error) {
@@ -219,5 +221,13 @@ export default function Login() {
         </p>
       </div>
     </section>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

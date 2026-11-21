@@ -6,13 +6,18 @@ import React from 'react';
 
 const PetDetailPage = async ({ params }) => {
   const { id } = await params;
-  const { token } = await auth.api.getToken({
-      headers: await headers()
-    });
-  const pet = await getPetById(id,token);
+  const reqHeaders = await headers();
+
+  const [sessionData, { token }] = await Promise.all([
+    auth.api.getSession({ headers: reqHeaders }),
+    auth.api.getToken({ headers: reqHeaders }),
+  ]);
+
+  const pet = await getPetById(id, token);
+
   return (
-    <div>
-      <PetDetails key={pet._id} pet={pet} />
+    <div className='flex'>
+      <PetDetails key={pet._id} pet={pet} user={sessionData?.user} />
     </div>
   );
 };

@@ -2,30 +2,32 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-// import { usePets } from "@/contexts/PetContext";
 import Image from "next/image";
 import Link from "next/link";
+import RequestFormModal from "./RequestFormModal";
+import { authClient } from "@/lib/auth-client";
 
-export default function PetCard({ pet, index = 0 }) {
-  // const { setSelectedPet, startAdoption } = usePets();
+export default function PetCard({ 
+  pet, 
+  index = 0, 
+  onSelectPet 
+}) {
   const [isHovered, setIsHovered] = useState(false);
-
   const isAvailable = pet.status === "Available";
+
+  const { data: sessionData } = authClient.useSession();
+  const user = sessionData?.user;
 
   const getSpeciesEmoji = (sp = "") => {
     switch (sp.toLowerCase()) {
-      case "dog":
-        return "🐶";
-      case "cat":
-        return "🐱";
-      case "rabbit":
-        return "🐰";
-      case "bird":
-        return "🦜";
-      default:
-        return "🐾";
+      case "dog": return "🐶";
+      case "cat": return "🐱";
+      case "rabbit": return "🐰";
+      case "bird": return "🦜";
+      default: return "🐾";
     }
   };
+
 
   return (
     <motion.div
@@ -50,10 +52,10 @@ export default function PetCard({ pet, index = 0 }) {
       }}
     >
       <div
-        onClick={() => setSelectedPet(pet)}
+        onClick={() => onSelectPet?.(pet)}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && setSelectedPet(pet)}
+        onKeyDown={(e) => e.key === "Enter" && onSelectPet?.(pet)}
         aria-label={`View details for ${pet.name}`}
         style={{
           position: "relative",
@@ -61,7 +63,7 @@ export default function PetCard({ pet, index = 0 }) {
           paddingTop: "70%",
           overflow: "hidden",
           background: "var(--color-canvas)",
-          cursor: "pointer",
+          cursor: onSelectPet ? "pointer" : "default",
         }}
       >
         <Image
@@ -70,10 +72,6 @@ export default function PetCard({ pet, index = 0 }) {
           loading="lazy"
           width={500}
           height={350}
-          onError={(e) => {
-            e.currentTarget.src =
-              "https://unsplash.com";
-          }}
           style={{
             position: "absolute",
             top: 0,
@@ -107,7 +105,7 @@ export default function PetCard({ pet, index = 0 }) {
           </span>
         </div>
 
-        {pet.size && (
+        {pet.healthStatus && (
           <div style={{ position: "absolute", top: "0.75rem", right: "0.75rem", zIndex: 5 }}>
             <span
               style={{
@@ -118,9 +116,10 @@ export default function PetCard({ pet, index = 0 }) {
                 background: "rgba(0, 0, 0, 0.55)",
                 color: "#fff",
                 backdropFilter: "blur(4px)",
+                textTransform: "capitalize",
               }}
             >
-              {pet.size}
+              {pet.healthStatus}
             </span>
           </div>
         )}
@@ -179,24 +178,6 @@ export default function PetCard({ pet, index = 0 }) {
           </div>
         )}
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginBottom: "0.85rem" }}>
-          {pet.traits?.slice(0, 3).map((trait, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: "0.72rem",
-                padding: "0.2rem 0.55rem",
-                background: "var(--color-canvas)",
-                borderRadius: "var(--radius-sm, 6px)",
-                color: "var(--color-bark)",
-                fontWeight: 500,
-              }}
-            >
-              {trait}
-            </span>
-          ))}
-        </div>
-
         <p
           className="text-bark"
           style={{
@@ -211,11 +192,12 @@ export default function PetCard({ pet, index = 0 }) {
         >
           {pet.bio}
         </p>
-
         <div
           style={{
             display: "flex",
-            gap: "0.6rem",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "0.5rem",
             fontSize: "0.72rem",
             color: "var(--color-bark)",
             opacity: 0.85,
@@ -224,34 +206,23 @@ export default function PetCard({ pet, index = 0 }) {
             borderTop: "1px solid rgba(0,0,0,0.06)",
           }}
         >
-          <span>{pet.goodWithKids ? "✅ Kids" : "❌ Kids"}</span>
-          <span>{pet.goodWithCats ? "✅ Cats" : "❌ Cats"}</span>
-          <span>{pet.goodWithDogs ? "✅ Dogs" : "❌ Dogs"}</span>
+          <span>
+            {pet.vaccinationStatus === "up-to-date"
+              ? "✅ Vaccinated"
+              : `💉 ${pet.vaccinationStatus || "Vaccination N/A"}`}
+          </span>
+          {pet.postedDate && <span>Listed {pet.postedDate}</span>}
         </div>
 
         <div style={{ marginTop: "auto", display: "flex", gap: "0.5rem" }}>
           <Link
             href={`/pets/${pet._id}`}
             className="btn btn-secondary"
-            style={{ flex: 1, fontSize: "0.875rem", padding: "0.55rem" }}
+            style={{ flex: 1, fontSize: "0.875rem", padding: "0.55rem", textAlign: "center" }}
           >
-             Meet {pet.name}
+            Meet {pet.name}
           </Link>
-          <button
-            type="button"
-            onClick={() => isAvailable && startAdoption(pet)}
-            disabled={!isAvailable}
-            className="btn btn-primary"
-            style={{
-              flex: 1,
-              fontSize: "0.875rem",
-              padding: "0.55rem",
-              opacity: isAvailable ? 1 : 0.55,
-              cursor: isAvailable ? "pointer" : "not-allowed",
-            }}
-          >
-            {isAvailable ? "Adopt" : "Pending"}
-          </button>
+          <RequestFormModal pet={pet} user={user} />
         </div>
       </div>
     </motion.div>
