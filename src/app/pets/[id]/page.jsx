@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import PetDetails from "@/components/PetDetails";
 import { authClient, useSession } from "@/lib/auth-client";
 import { getPetById } from "@/lib/pets/data";
@@ -44,9 +45,7 @@ export default function PetDetailPage() {
 
   if (loading || isPending) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center bg-[#F2E8DA] text-[#3B2418]">
-        <p className="text-sm font-semibold">Loading pet details...</p>
-      </div>
+     <Loading />
     );
   }
 

@@ -213,8 +213,8 @@ export default function PetCard({
         <div style={{ marginTop: "auto", display: "flex", gap: "0.5rem" }}>
           <Link
             href={`/pets/${pet._id}`}
-            className="btn btn-secondary"
-            style={{ flex: 1, fontSize: "0.875rem", padding: "0.55rem", textAlign: "center" }}
+            className="btn btn-secondary rounded-3xl"
+            style={{ flex: 1, fontSize: "0.875rem", padding: "0.55rem", textAlign: "center", background: "#8EC5FF" }}
           >
             Meet {pet.name}
           </Link>

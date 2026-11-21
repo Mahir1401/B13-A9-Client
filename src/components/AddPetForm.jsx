@@ -106,7 +106,7 @@ export default function AddPetListingSection() {
         <div style={{ marginBottom: "2rem" }}>
           <p
             style={{
-              backgroundColor: "#F9F4ED",
+              backgroundColor: "#F2E8DA",
               color: "#3B2418",
               padding: "0.35rem 1rem",
               marginBottom: "0.85rem",
@@ -146,7 +146,7 @@ export default function AddPetListingSection() {
         <div
           style={{
             padding: "2.25rem 2rem",
-            backgroundColor: "#F9F4ED",
+            backgroundColor: "#F2E8DA",
             border: "1px solid rgba(59, 36, 24, 0.15)",
           }}
           className="rounded-3xl shadow-sm"
@@ -215,7 +215,7 @@ export default function AddPetListingSection() {
 
                 <Select.Popover
                   style={{
-                    backgroundColor: "#F9F4ED",
+                    backgroundColor: "#F2E8DA",
                     border: "1px solid rgba(59, 36, 24, 0.2)",
                   }}
                   className="rounded-xl shadow-md p-1"
@@ -303,7 +303,7 @@ export default function AddPetListingSection() {
 
                 <Select.Popover
                   style={{
-                    backgroundColor: "#F9F4ED",
+                    backgroundColor: "#F2E8DA",
                     border: "1px solid rgba(59, 36, 24, 0.2)",
                   }}
                   className="rounded-xl shadow-md p-1"
@@ -355,7 +355,7 @@ export default function AddPetListingSection() {
 
                 <Select.Popover
                   style={{
-                    backgroundColor: "#F9F4ED",
+                    backgroundColor: "#F2E8DA",
                     border: "1px solid rgba(59, 36, 24, 0.2)",
                   }}
                   className="rounded-xl shadow-md p-1"
@@ -424,7 +424,7 @@ export default function AddPetListingSection() {
 
                 <Select.Popover
                   style={{
-                    backgroundColor: "#F9F4ED",
+                    backgroundColor: "#F2E8DA",
                     border: "1px solid rgba(59, 36, 24, 0.2)",
                   }}
                   className="rounded-xl shadow-md p-1"

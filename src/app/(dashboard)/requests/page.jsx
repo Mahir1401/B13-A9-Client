@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import { authClient, useSession } from "@/lib/auth-client";
 import { getMyRequests } from "@/lib/pets/data";
 import { cancelAdoptionRequest } from "@/lib/pets/action";
+import Loading from "@/components/Loading";
 
 export default function RequestsPage() {
   const { data: session } = useSession();
@@ -59,7 +60,7 @@ export default function RequestsPage() {
         </h1>
 
         {loading ? (
-          <p className="text-sm">Loading requests...</p>
+          <Loading />
         ) : requests.length === 0 ? (
           <div className="p-8 rounded-3xl bg-[#F9F4ED] border border-[#3B2418]/15 text-center">
             <p className="text-sm mb-4">You haven&apos;t submitted any adoption requests yet.</p>
