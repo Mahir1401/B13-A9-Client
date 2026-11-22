@@ -1,51 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function PetCard({ 
-  pet, 
-  index = 0, 
-  onSelectPet 
-}) {
-  const [isHovered, setIsHovered] = useState(false);
-  const isAvailable = pet.status === "Available";
+const speciesEmoji = {
+  dog: "🐶",
+  cat: "🐱",
+  rabbit: "🐰",
+  bird: "🦜",
+};
 
+function getSpeciesEmoji(species = "") {
+  return speciesEmoji[species.toLowerCase()] || "🐾";
+}
 
-  const getSpeciesEmoji = (sp = "") => {
-    switch (sp.toLowerCase()) {
-      case "dog": return "🐶";
-      case "cat": return "🐱";
-      case "rabbit": return "🐰";
-      case "bird": return "🦜";
-      default: return "🐾";
-    }
-  };
+function getStatusClasses(status) {
+  if (status === "Available") {
+    return "bg-accent text-accent-foreground";
+  }
+  if (status === "Pending Adoption") {
+    return "bg-warning text-warning-foreground";
+  }
+  return "bg-default text-default-foreground";
+}
 
-
+export default function PetCard({ pet, index = 0, onSelectPet }) {
   return (
     <motion.div
-      className="card"
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.35, delay: index * 0.06 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        position: "relative",
-        borderRadius: "var(--radius-lg, 16px)",
-        overflow: "hidden",
-        boxShadow: isHovered
-          ? "0 12px 24px -8px rgba(0, 0, 0, 0.12)"
-          : "0 2px 8px rgba(0, 0, 0, 0.05)",
-        transition: "box-shadow 0.3s ease",
-      }}
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface text-surface-foreground shadow-sm transition-shadow duration-300 hover:shadow-xl"
     >
       <div
         onClick={() => onSelectPet?.(pet)}
@@ -53,155 +40,57 @@ export default function PetCard({
         tabIndex={0}
         onKeyDown={(e) => e.key === "Enter" && onSelectPet?.(pet)}
         aria-label={`View details for ${pet.name}`}
-        style={{
-          position: "relative",
-          width: "100%",
-          paddingTop: "70%",
-          overflow: "hidden",
-          background: "var(--color-canvas)",
-          cursor: onSelectPet ? "pointer" : "default",
-        }}
+        className={`relative aspect-[10/7] w-full overflow-hidden bg-default ${
+          onSelectPet ? "cursor-pointer" : "cursor-default"
+        }`}
       >
         <Image
           src={pet.image}
           alt={`${pet.name} - ${pet.breed}`}
           loading="lazy"
-          width={500}
-          height={350}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            transform: isHovered ? "scale(1.05)" : "scale(1)",
-            transition: "transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-          className="pet-image"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
 
-        <div style={{ position: "absolute", top: "0.75rem", left: "0.75rem", zIndex: 5 }}>
-          <span
-            className={`badge ${
-              isAvailable
-                ? "badge-approved"
-                : pet.status === "Pending Adoption"
-                ? "badge-pending"
-                : "badge-rejected"
-            }`}
-            style={{
-              backdropFilter: "blur(6px)",
-              background: "rgba(255, 255, 255, 0.9)",
-              fontWeight: 600,
-              boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
-            }}
-          >
-            {pet.status}
-          </span>
-        </div>
+        <span
+          className={`absolute left-3 top-3 z-[5] rounded-full px-3 py-1 text-xs font-semibold shadow-sm ${getStatusClasses(
+            pet.status
+          )}`}
+        >
+          {pet.status}
+        </span>
 
         {pet.healthStatus && (
-          <div style={{ position: "absolute", top: "0.75rem", right: "0.75rem", zIndex: 5 }}>
-            <span
-              style={{
-                fontSize: "0.7rem",
-                fontWeight: 600,
-                padding: "0.2rem 0.55rem",
-                borderRadius: "999px",
-                background: "rgba(0, 0, 0, 0.55)",
-                color: "#fff",
-                backdropFilter: "blur(4px)",
-                textTransform: "capitalize",
-              }}
-            >
-              {pet.healthStatus}
-            </span>
-          </div>
+          <span className="absolute right-3 top-3 z-[5] rounded-full bg-brown/70 px-2.5 py-1 text-[0.7rem] font-semibold capitalize text-cream backdrop-blur-sm">
+            {pet.healthStatus}
+          </span>
         )}
       </div>
 
-      <div
-        style={{
-          padding: "var(--space-lg, 1.25rem)",
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            gap: "0.5rem",
-            marginBottom: "0.2rem",
-          }}
-        >
-          <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700 }}>
+      <div className="flex flex-1 flex-col p-5">
+        <div className="mb-1 flex items-baseline justify-between gap-2">
+          <h3 className="font-serif text-xl font-bold text-foreground">
             {pet.name} {getSpeciesEmoji(pet.species)}
           </h3>
-          <span
-            style={{
-              fontSize: "1.125rem",
-              fontWeight: 700,
-              color: "var(--color-moss)",
-              fontFamily: "'Fraunces', serif",
-              whiteSpace: "nowrap",
-            }}
-          >
+          <span className="whitespace-nowrap font-serif text-lg font-bold text-foreground">
             ${pet.fee}
           </span>
         </div>
 
-        <div className="caption" style={{ marginBottom: "0.35rem", fontWeight: 500 }}>
+        <p className="mb-1.5 text-xs font-medium text-muted">
           {pet.breed} · {pet.age} · {pet.gender}
-        </div>
+        </p>
 
         {pet.location && (
-          <div
-            style={{
-              fontSize: "0.75rem",
-              color: "var(--color-bark)",
-              opacity: 0.75,
-              marginBottom: "0.75rem",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            📍 {pet.location}
-          </div>
+          <p className="mb-3 truncate text-xs text-muted">📍 {pet.location}</p>
         )}
 
-        <p
-          className="text-bark"
-          style={{
-            fontSize: "0.875rem",
-            margin: "0 0 1rem 0",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            lineHeight: 1.5,
-          }}
-        >
+        <p className="mb-4 line-clamp-2 text-sm leading-normal text-foreground/80">
           {pet.bio}
         </p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontSize: "0.72rem",
-            color: "var(--color-bark)",
-            opacity: 0.85,
-            marginBottom: "1rem",
-            paddingTop: "0.65rem",
-            borderTop: "1px solid rgba(0,0,0,0.06)",
-          }}
-        >
+
+        <div className="mb-4 flex items-center justify-between gap-2 border-t border-separator pt-2.5 text-[0.72rem] text-muted">
           <span>
             {pet.vaccinationStatus === "up-to-date"
               ? "✅ Vaccinated"
@@ -210,11 +99,10 @@ export default function PetCard({
           {pet.postedDate && <span>Listed {pet.postedDate}</span>}
         </div>
 
-        <div style={{ marginTop: "auto", display: "flex", gap: "0.5rem" }}>
+        <div className="mt-auto flex gap-2">
           <Link
             href={`/pets/${pet._id}`}
-            className="btn btn-secondary rounded-3xl"
-            style={{ flex: 1, fontSize: "0.875rem", padding: "0.55rem", textAlign: "center", background: "#8EC5FF" }}
+            className="flex-1 rounded-full bg-accent px-4 py-2.5 text-center text-sm font-semibold text-accent-foreground transition-all hover:opacity-90 active:scale-[0.99]"
           >
             Meet {pet.name}
           </Link>

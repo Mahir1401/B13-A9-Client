@@ -15,6 +15,14 @@ import { submitAdoptionRequest } from "@/lib/pets/action";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
+const inputClass =
+  "w-full rounded-xl border border-border bg-field px-4 py-2.5 text-sm font-medium text-field-foreground placeholder:text-field-placeholder focus:outline-none focus:ring-2 focus:ring-focus";
+
+const readOnlyInputClass = `${inputClass} opacity-80`;
+
+const labelClass =
+  "text-xs font-semibold uppercase tracking-wider text-foreground/80";
+
 export default function RequestFormModal({ pet, user, token }) {
   const router = useRouter();
   const isAvailable = pet?.status === "Available";
@@ -32,17 +40,6 @@ export default function RequestFormModal({ pet, user, token }) {
   });
 
   if (!pet) return null;
-
-  const inputStyle = {
-    padding: "0.7rem 1rem",
-    backgroundColor: "#F2E8DA",
-    color: "#3B2418",
-    border: "1px solid rgba(59, 36, 24, 0.22)",
-  };
-
-  const labelStyle = {
-    color: "#3B2418",
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,145 +64,56 @@ export default function RequestFormModal({ pet, user, token }) {
         type="button"
         isDisabled={!isAvailable}
         onPress={() => isAvailable && setIsOpen(true)}
-        style={{
-          backgroundColor: isAvailable
-            ? "#8EC5FF"
-            : "rgba(59, 36, 24, 0.15)",
-          color: isAvailable ? "#3B2418" : "rgba(59, 36, 24, 0.45)",
-          padding: "0.85rem 1.75rem",
-          cursor: isAvailable ? "pointer" : "not-allowed",
-        }}
-        className="flex-1 inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold hover:opacity-90 active:scale-[0.99] transition-all shadow-xs"
+        className={`inline-flex flex-1 items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold shadow-xs transition-all ${
+          isAvailable
+            ? "cursor-pointer bg-accent text-accent-foreground hover:opacity-90 active:scale-[0.99]"
+            : "cursor-not-allowed bg-default text-muted"
+        }`}
       >
-        <Heart className="w-4 h-4" />
+        <Heart className="size-4" />
         {isAvailable ? `Adopt ${pet.name}` : pet.status}
       </Button>
 
-      <Modal.Backdrop
-        style={{
-          backgroundColor: "rgba(59, 36, 24, 0.45)",
-          backdropFilter: "blur(4px)",
-        }}
-      >
+      <Modal.Backdrop className="bg-brown/45 backdrop-blur-sm">
         <Modal.Container>
-          <Modal.Dialog
-            style={{
-              maxWidth: "460px",
-              width: "100%",
-              padding: "2rem",
-              backgroundColor: "#F9F4ED",
-              color: "#3B2418",
-              border: "1px solid rgba(59, 36, 24, 0.18)",
-            }}
-            className="rounded-3xl shadow-xl relative"
-          >
-            <Modal.CloseTrigger
-              style={{
-                color: "#3B2418",
-                backgroundColor: "#F2E8DA",
-                border: "1px solid rgba(59, 36, 24, 0.18)",
-              }}
-              className="rounded-full p-1.5 hover:opacity-80 transition-opacity cursor-pointer"
-            />
+          <Modal.Dialog className="relative w-full max-w-[460px] rounded-3xl border border-border bg-overlay p-8 text-overlay-foreground shadow-xl">
+            <Modal.CloseTrigger className="cursor-pointer rounded-full border border-border bg-background p-1.5 text-foreground transition-opacity hover:opacity-80" />
 
             <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <Modal.Header
-                style={{
-                  paddingBottom: "1rem",
-                  marginBottom: "0.25rem",
-                  borderBottom: "1px solid rgba(59, 36, 24, 0.12)",
-                }}
-                className="flex flex-col items-start gap-2 pr-8"
-              >
-                <p
-                  style={{
-                    backgroundColor: "#F2E8DA",
-                    color: "#3B2418",
-                    padding: "0.25rem 0.85rem",
-                    border: "1px solid rgba(59, 36, 24, 0.18)",
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full text-xs font-semibold"
-                >
-                  <PawPrint
-                    className="w-3.5 h-3.5"
-                    style={{ color: "#3B2418" }}
-                  />
+              <Modal.Header className="mb-1 flex flex-col items-start gap-2 border-b border-separator pb-4 pr-8">
+                <p className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3.5 py-1 text-xs font-semibold text-foreground">
+                  <PawPrint className="size-3.5" />
                   Adoption Application
                 </p>
 
-                <Modal.Heading
-                  style={{ color: "#3B2418" }}
-                  className="font-[Fraunces] text-2xl font-bold tracking-tight"
-                >
+                <Modal.Heading className="font-serif text-2xl font-bold tracking-tight text-foreground">
                   Adopt {pet.name}
                 </Modal.Heading>
               </Modal.Header>
 
-              <Modal.Body
-                style={{ maxHeight: "65vh" }}
-                className="flex flex-col gap-3.5 p-0 overflow-y-auto pr-1"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <TextField
-                    name="petName"
-                    isReadOnly
-                    className="flex flex-col gap-1.5"
-                  >
-                    <Label
-                      style={labelStyle}
-                      className="text-xs font-semibold uppercase tracking-wider opacity-80"
-                    >
-                      Pet Name
-                    </Label>
-                    <Input
-                      value={request.petName}
-                      readOnly
-                      style={inputStyle}
-                      className="w-full rounded-xl text-sm font-medium opacity-80 focus:outline-none"
-                    />
+              <Modal.Body className="flex max-h-[65vh] flex-col gap-3.5 overflow-y-auto p-0 pr-1">
+                <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+                  <TextField name="petName" isReadOnly className="flex flex-col gap-1.5">
+                    <Label className={labelClass}>Pet Name</Label>
+                    <Input value={request.petName} readOnly className={readOnlyInputClass} />
                   </TextField>
 
-                  <TextField
-                    name="pickupDate"
-                    isRequired
-                    className="flex flex-col gap-1.5"
-                  >
-                    <Label
-                      style={labelStyle}
-                      className="text-xs font-semibold uppercase tracking-wider opacity-80"
-                    >
-                      Pickup Date
-                    </Label>
+                  <TextField name="pickupDate" isRequired className="flex flex-col gap-1.5">
+                    <Label className={labelClass}>Pickup Date</Label>
                     <Input
                       type="date"
                       value={request.pickupDate}
                       onChange={(e) =>
                         setRequest({ ...request, pickupDate: e.target.value })
                       }
-                      style={inputStyle}
-                      className="w-full rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30"
+                      className={inputClass}
                     />
                   </TextField>
                 </div>
 
-                <TextField
-                  name="userName"
-                  isRequired
-                  isReadOnly
-                  className="flex flex-col gap-1.5"
-                >
-                  <Label
-                    style={labelStyle}
-                    className="text-xs font-semibold uppercase tracking-wider opacity-80"
-                  >
-                    Your Name
-                  </Label>
-                  <Input
-                    value={request.userName}
-                    readOnly
-                    style={inputStyle}
-                    className="w-full rounded-xl text-sm font-medium opacity-80 focus:outline-none"
-                  />
+                <TextField name="userName" isRequired isReadOnly className="flex flex-col gap-1.5">
+                  <Label className={labelClass}>Your Name</Label>
+                  <Input value={request.userName} readOnly className={readOnlyInputClass} />
                 </TextField>
 
                 <TextField
@@ -215,31 +123,12 @@ export default function RequestFormModal({ pet, user, token }) {
                   isReadOnly
                   className="flex flex-col gap-1.5"
                 >
-                  <Label
-                    style={labelStyle}
-                    className="text-xs font-semibold uppercase tracking-wider opacity-80"
-                  >
-                    Your Email
-                  </Label>
-                  <Input
-                    value={request.userEmail}
-                    readOnly
-                    style={inputStyle}
-                    className="w-full rounded-xl text-sm font-medium opacity-80 focus:outline-none"
-                  />
+                  <Label className={labelClass}>Your Email</Label>
+                  <Input value={request.userEmail} readOnly className={readOnlyInputClass} />
                 </TextField>
 
-                <TextField
-                  name="message"
-                  isRequired
-                  className="flex flex-col gap-1.5"
-                >
-                  <Label
-                    style={labelStyle}
-                    className="text-xs font-semibold uppercase tracking-wider opacity-80"
-                  >
-                    Message to Owner
-                  </Label>
+                <TextField name="message" isRequired className="flex flex-col gap-1.5">
+                  <Label className={labelClass}>Message to Owner</Label>
                   <TextArea
                     rows={3}
                     placeholder="Tell the owner about your home and why you'd be a great fit..."
@@ -247,26 +136,20 @@ export default function RequestFormModal({ pet, user, token }) {
                     onChange={(e) =>
                       setRequest({ ...request, message: e.target.value })
                     }
-                    style={inputStyle}
-                    className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30"
+                    className={inputClass}
                   />
                 </TextField>
               </Modal.Body>
 
-              <Modal.Footer style={{ marginTop: "0.75rem" }} className="p-0">
+              <Modal.Footer className="mt-3 p-0">
                 <Button
                   type="submit"
                   isDisabled={isSubmitting}
-                  style={{
-                    backgroundColor: "#8EC5FF",
-                    color: "#3B2418",
-                    padding: "0.85rem 1.5rem",
-                    opacity: isSubmitting ? 0.65 : 1,
-                    cursor: isSubmitting ? "not-allowed" : "pointer",
-                  }}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold hover:opacity-90 active:scale-[0.99] transition-all shadow-xs"
+                  className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground shadow-xs transition-all hover:opacity-90 active:scale-[0.99] ${
+                    isSubmitting ? "cursor-not-allowed opacity-65" : "cursor-pointer"
+                  }`}
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="size-4" />
                   {isSubmitting ? "Submitting..." : "Submit Adoption Request"}
                 </Button>
               </Modal.Footer>

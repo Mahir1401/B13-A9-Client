@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -45,27 +45,14 @@ export default function PetDetails({ pet, user, token }) {
   ];
 
   return (
-    <section
-      style={{
-        padding: "2.5rem 1.5rem 4rem",
-        backgroundColor: "#F2E8DA",
-        color: "#3B2418",
-      }}
-      className="min-h-screen w-full"
-    >
-      <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "1.5rem" }}>
+    <section className="min-h-screen w-full bg-background px-6 pb-16 pt-10 text-foreground">
+      <div className="mx-auto max-w-[720px]">
+        <div className="mb-6">
           <Link
             href="/pets"
-            style={{
-              backgroundColor: "#F9F4ED",
-              color: "#3B2418",
-              padding: "0.5rem 1.15rem",
-              border: "1px solid rgba(59, 36, 24, 0.18)",
-            }}
-            className="inline-flex items-center gap-2 rounded-full text-xs font-semibold hover:opacity-85 transition-opacity"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-[1.15rem] py-2 text-xs font-semibold text-surface-foreground transition-opacity hover:opacity-85"
           >
-            <ArrowLeft className="w-3.5 h-3.5" style={{ color: "#3B2418" }} />
+            <ArrowLeft className="size-3.5" />
             Back to All Pets
           </Link>
         </div>
@@ -74,44 +61,23 @@ export default function PetDetails({ pet, user, token }) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          style={{
-            padding: "2rem",
-            backgroundColor: "#F9F4ED",
-            border: "1px solid rgba(59, 36, 24, 0.15)",
-          }}
-          className="rounded-3xl shadow-sm flex flex-col gap-7"
+          className="flex flex-col gap-7 rounded-3xl border border-border bg-surface p-8 shadow-sm"
         >
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              aspectRatio: "16 / 11",
-              overflow: "hidden",
-              backgroundColor: "#F2E8DA",
-              border: "1px solid rgba(59, 36, 24, 0.12)",
-            }}
-            className="rounded-2xl"
-          >
+          <div className="relative aspect-[16/11] w-full overflow-hidden rounded-2xl border border-border bg-background">
             <Image
               src={pet.image}
               alt={`${pet.name} - ${pet.breed}`}
               priority
               fill
               sizes="(max-width: 768px) 100vw, 720px"
-              style={{ objectFit: "cover" }}
+              className="object-cover"
             />
             <p
-              style={{
-                position: "absolute",
-                top: "1rem",
-                right: "1rem",
-                zIndex: 10,
-                backgroundColor: isAvailable ? "#8EC5FF" : "#F2E8DA",
-                color: "#3B2418",
-                padding: "0.35rem 0.95rem",
-                border: "1px solid rgba(59, 36, 24, 0.15)",
-              }}
-              className="rounded-full text-xs font-semibold shadow-sm"
+              className={`absolute right-4 top-4 z-10 rounded-full border border-border px-4 py-1.5 text-xs font-semibold shadow-sm ${
+                isAvailable
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-default text-default-foreground"
+              }`}
             >
               {pet.status}
             </p>
@@ -120,101 +86,50 @@ export default function PetDetails({ pet, user, token }) {
           <div className="flex flex-col gap-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h1
-                  style={{ color: "#3B2418" }}
-                  className="font-[Fraunces] text-3xl md:text-4xl font-bold tracking-tight"
-                >
+                <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                   {pet.name}
                 </h1>
 
-                <div
-                  style={{ marginTop: "0.6rem" }}
-                  className="flex flex-wrap items-center gap-2"
-                >
+                <div className="mt-2.5 flex flex-wrap items-center gap-2">
                   {pet.species && (
-                    <p
-                      style={{
-                        backgroundColor: "#8EC5FF",
-                        color: "#3B2418",
-                        padding: "0.25rem 0.85rem",
-                      }}
-                      className="rounded-full text-xs font-semibold capitalize"
-                    >
+                    <p className="rounded-full bg-accent px-3.5 py-1 text-xs font-semibold capitalize text-accent-foreground">
                       {pet.species}
                     </p>
                   )}
                   {pet.breed && (
-                    <p
-                      style={{
-                        backgroundColor: "#F2E8DA",
-                        color: "#3B2418",
-                        padding: "0.25rem 0.85rem",
-                        border: "1px solid rgba(59, 36, 24, 0.18)",
-                      }}
-                      className="rounded-full text-xs font-medium"
-                    >
+                    <p className="rounded-full border border-border bg-background px-3.5 py-1 text-xs font-medium text-foreground">
                       {pet.breed}
                     </p>
                   )}
                   {pet.gender && (
-                    <p
-                      style={{
-                        backgroundColor: "#F2E8DA",
-                        color: "#3B2418",
-                        padding: "0.25rem 0.85rem",
-                        border: "1px solid rgba(59, 36, 24, 0.18)",
-                      }}
-                      className="rounded-full text-xs font-medium capitalize"
-                    >
+                    <p className="rounded-full border border-border bg-background px-3.5 py-1 text-xs font-medium capitalize text-foreground">
                       {pet.gender}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="text-right shrink-0">
-                <p
-                  style={{ color: "rgba(59, 36, 24, 0.65)" }}
-                  className="text-xs font-medium"
-                >
-                  Adoption Fee
-                </p>
-                <p
-                  style={{ color: "#3B2418" }}
-                  className="font-[Fraunces] text-2xl md:text-3xl font-bold"
-                >
+              <div className="shrink-0 text-right">
+                <p className="text-xs font-medium text-muted">Adoption Fee</p>
+                <p className="font-serif text-2xl font-bold text-foreground md:text-3xl">
                   ${pet.fee}
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {attributes.map((item) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.label}
-                    style={{
-                      backgroundColor: "#F2E8DA",
-                      border: "1px solid rgba(59, 36, 24, 0.14)",
-                      padding: "0.85rem 1rem",
-                    }}
-                    className="rounded-2xl flex flex-col justify-center"
+                    className="flex flex-col justify-center rounded-2xl border border-border bg-background px-4 py-3.5"
                   >
-                    <div
-                      style={{
-                        color: "rgba(59, 36, 24, 0.68)",
-                        marginBottom: "0.25rem",
-                      }}
-                      className="flex items-center gap-1.5 text-xs font-medium"
-                    >
-                      <Icon className="w-3.5 h-3.5" style={{ color: "#3B2418" }} />
-                      <p className="m-0">{item.label}</p>
+                    <div className="mb-1 flex items-center gap-1.5 text-xs font-medium text-muted">
+                      <Icon className="size-3.5 text-foreground" />
+                      <p>{item.label}</p>
                     </div>
-                    <p
-                      style={{ color: "#3B2418" }}
-                      className="text-sm font-semibold capitalize m-0"
-                    >
+                    <p className="text-sm font-semibold capitalize text-foreground">
                       {item.value}
                     </p>
                   </div>
@@ -223,53 +138,23 @@ export default function PetDetails({ pet, user, token }) {
             </div>
 
             {pet.bio && (
-              <div
-                style={{
-                  paddingTop: "1rem",
-                  borderTop: "1px solid rgba(59, 36, 24, 0.12)",
-                }}
-              >
-                <h2
-                  style={{ color: "#3B2418", marginBottom: "0.4rem" }}
-                  className="font-[Fraunces] text-base font-bold"
-                >
+              <div className="border-t border-separator pt-4">
+                <h2 className="mb-1.5 font-serif text-base font-bold text-foreground">
                   About {pet.name}
                 </h2>
-                <p
-                  style={{ color: "rgba(59, 36, 24, 0.8)" }}
-                  className="text-sm leading-relaxed"
-                >
+                <p className="text-sm leading-relaxed text-foreground/80">
                   {pet.bio}
                 </p>
               </div>
             )}
 
-            <div
-              style={{ paddingTop: "0.5rem" }}
-              className="flex flex-wrap gap-3"
-            >
+            <div className="flex flex-wrap gap-3 pt-2">
               {isOwner ? (
-                <p
-                  style={{
-                    backgroundColor: "#F2E8DA",
-                    color: "#3B2418",
-                    padding: "0.75rem 1.5rem",
-                    border: "1px solid rgba(59, 36, 24, 0.2)",
-                  }}
-                  className="rounded-full text-sm font-semibold m-0"
-                >
+                <p className="rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground">
                   You listed this pet
                 </p>
               ) : !isAvailable ? (
-                <p
-                  style={{
-                    backgroundColor: "#F2E8DA",
-                    color: "rgba(59, 36, 24, 0.6)",
-                    padding: "0.75rem 1.5rem",
-                    border: "1px solid rgba(59, 36, 24, 0.15)",
-                  }}
-                  className="rounded-full text-sm font-semibold m-0"
-                >
+                <p className="rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-muted">
                   Already Adopted
                 </p>
               ) : (

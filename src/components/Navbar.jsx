@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut, useSession } from '@/lib/auth-client';
-import { Button, Dropdown, Header, Label, Separator } from '@heroui/react';
+import { Button, Dropdown, Header, Label, Separator, useTheme } from '@heroui/react';
 import {
   Home,
   Moon,
@@ -13,14 +13,21 @@ import {
   LogOut,
   LogIn,
   Rocket,
+  ClipboardList,
+  PlusCircle,
+  Menu,
+  X,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 export default function Navbar() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme('light');
+  const [mounted, setMounted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -28,195 +35,228 @@ export default function Navbar() {
   const { data: session, isPending } = useSession();
   const user = session?.user;
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  const isDarkMode = mounted && resolvedTheme === 'dark';
+
   const handleLogout = async () => {
     try {
       await signOut();
+      toast.success('Logged out successfully');
       router.push('/');
       router.refresh();
     } catch (error) {
       console.error('Logout failed:', error);
+      toast.error('Failed to log out');
     }
   };
 
-  useEffect(() => {
-    const root = document.documentElement;
-
-    if (isDarkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [isDarkMode]);
-
   const handleMenuAction = (key) => {
     if (key === 'dashboard') {
-      router.push('/requests');
+      router.push('/my-listings');
     } else if (key === 'logout') {
       handleLogout();
     }
   };
 
-  return (
-    <header className="w-full bg-[#3B2418] dark:bg-[#23150E] border-b border-[#F2E8DA]/15 transition-colors">
-      <div
-        className="w-full flex justify-between items-center h-[4.5rem]"
-        style={{ padding: '0 1.5rem' }}
-      >
-        <Link href="/" className="flex items-center group" style={{ gap: '0.65rem' }}>
-          <PawPrint
-            className="text-[#8EC5FF] border-2 border-[#8EC5FF] rounded-full transition-transform group-hover:scale-105"
-            style={{ width: '2rem', height: '2rem', padding: '0.25rem' }}
-          />
+  const navLinks = [
+    { href: '/', label: 'Home', icon: Home, private: false },
+    { href: '/pets', label: 'All Pets', icon: Search, private: false },
+    { href: '/requests', label: 'My Requests', icon: ClipboardList, private: true },
+    { href: '/add-pet', label: 'Add Pet', icon: PlusCircle, private: true },
+  ];
 
-          <span className="font-[Fraunces] text-[1.35rem] font-bold text-[#F2E8DA] tracking-[-0.02em]">
+  const visibleLinks = navLinks.filter((link) => !link.private || Boolean(user));
+
+  return (
+    <header className="sticky top-0 z-40 w-full border-b border-cream/15 bg-brown transition-colors">
+      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between px-4 sm:px-6">
+        {/* Logo + Website Name */}
+        <Link href="/" className="group flex items-center gap-2.5">
+          <PawPrint className="size-8 rounded-full border-2 border-baby-blue p-1 text-baby-blue transition-transform group-hover:scale-105" />
+          <span className="font-serif text-[1.35rem] font-bold tracking-[-0.02em] text-cream">
             PetNest
           </span>
         </Link>
 
-        <nav className="flex items-center text-sm font-medium" style={{ gap: '0.75rem' }}>
-          <Link
-            href="/"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/'
-              ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
-              : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-              }`}
-            style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
-          >
-            <Home size={16} />
-            <span>Home</span>
-          </Link>
-
-          <Link
-            href="/pets"
-            className={`flex items-center justify-center rounded-full whitespace-nowrap transition-colors ${pathname === '/pets'
-              ? 'bg-[#8EC5FF] text-[#3B2418] font-semibold'
-              : 'text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10'
-              }`}
-            style={{ gap: '0.45rem', padding: '0.45rem 1rem' }}
-          >
-            <Search size={16} />
-            <span>All Pets</span>
-          </Link>
+        {/* Desktop Nav Links */}
+        <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
+          {visibleLinks.map(({ href, label, icon: Icon }) => {
+            const isActive = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 py-2 transition-colors ${
+                  isActive
+                    ? 'bg-baby-blue font-semibold text-brown'
+                    : 'text-cream/85 hover:bg-white/10 hover:text-cream'
+                }`}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center" style={{ gap: '1rem' }}>
+        {/* Right Controls */}
+        <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="text-[#F2E8DA]/80 hover:text-[#F2E8DA] hover:bg-[#F2E8DA]/10 rounded-full transition-colors cursor-pointer"
-            style={{ padding: '0.5rem' }}
-            title="Toggle Theme"
+            onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}
+            className="cursor-pointer rounded-full p-2 text-cream transition-colors hover:bg-white/10"
+            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             aria-label="Toggle Theme"
           >
-            {isDarkMode ? (
-              <Sun className="text-[#8EC5FF]" size={20} />
-            ) : (
-              <Moon size={20} />
-            )}
+            {isDarkMode ? <Sun className="text-baby-blue" size={20} /> : <Moon size={20} />}
           </button>
 
           {isPending ? (
-            <div className="w-24 h-8 animate-pulse bg-[#F2E8DA]/10 rounded-full" />
+            <div className="h-8 w-24 animate-pulse rounded-full bg-white/10" />
           ) : user ? (
-            <div className="relative">
-              <Dropdown>
-                <Button
-                  aria-label="Menu"
-                  variant="ghost"
-                  className="flex items-center gap-2 bg-transparent p-0 focus:outline-none group cursor-pointer"
-                >
-                  <Image
-                    src={user.image || '/image_pgdFnZ.png'}
-                    alt="User Profile"
-                    referrerPolicy="no-referrer"
-                    className="rounded-full border-2 border-[#8EC5FF] object-cover"
-                    style={{ width: '2rem', height: '2rem' }}
-                    height={32}
-                    width={32}
-                    unoptimized={user.image?.startsWith('http')}
-                  />
+            <Dropdown>
+              <Button
+                aria-label="User Menu"
+                variant="ghost"
+                className="group flex cursor-pointer items-center gap-2 bg-transparent p-0 focus:outline-none"
+              >
+                <Image
+                  src={user.image || '/image_pgdFnZ.png'}
+                  alt={user.name || 'User Profile'}
+                  referrerPolicy="no-referrer"
+                  className="size-8 rounded-full border-2 border-baby-blue object-cover"
+                  height={32}
+                  width={32}
+                  unoptimized={user.image?.startsWith('http')}
+                />
+                <span className="hidden max-w-[120px] truncate text-sm font-medium text-cream transition-colors sm:inline">
+                  {user.name}
+                </span>
+                <ChevronDown
+                  className="text-cream/75 transition-transform duration-200 group-aria-expanded:rotate-180 group-data-[open=true]:rotate-180"
+                  size={16}
+                />
+              </Button>
 
-                  <span className="text-sm font-medium text-[#F2E8DA] group-hover:text-[#8EC5FF] transition-colors">
-                    {user.name}
-                  </span>
+              <Dropdown.Popover
+                placement="bottom end"
+                className="min-w-[220px] rounded-xl border border-border bg-overlay p-1.5 shadow-lg"
+              >
+                <Dropdown.Menu onAction={handleMenuAction} aria-label="User menu">
+                  <Dropdown.Section>
+                    <Header className="flex flex-col gap-0.5 px-2.5 py-2">
+                      <span className="text-sm font-semibold leading-tight text-overlay-foreground">
+                        {user.name}
+                      </span>
+                      <span className="truncate text-xs font-normal text-muted">
+                        {user.email}
+                      </span>
+                    </Header>
+                  </Dropdown.Section>
 
-                  <ChevronDown
-                    className="text-[#F2E8DA]/70 transition-transform duration-200 group-aria-expanded:rotate-180 group-data-[open=true]:rotate-180"
-                    size={16}
-                  />
-                </Button>
+                  <Separator className="my-1 bg-separator" />
 
-                <Dropdown.Popover
-                  placement="bottom end"
-                  className="min-w-[220px] rounded-xl bg-[#F9F4ED] dark:bg-[#2B1A11] border border-[#3B2418]/15 dark:border-[#F2E8DA]/15 shadow-lg p-1.5"
-                >
-                  <Dropdown.Menu onAction={handleMenuAction} aria-label="User menu">
-                    <Dropdown.Section>
-                      <Header className="px-2.5 py-2 flex flex-col gap-0.5">
-                        <span className="text-sm font-semibold text-[#3B2418] dark:text-[#F2E8DA] leading-tight">
-                          {user.name}
-                        </span>
-                        <span className="text-xs font-normal text-[#3B2418]/65 dark:text-[#F2E8DA]/65 truncate">
-                          {user.email}
-                        </span>
-                      </Header>
-                    </Dropdown.Section>
+                  <Dropdown.Item
+                    id="dashboard"
+                    textValue="Dashboard"
+                    className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-overlay-foreground transition-colors hover:bg-default"
+                  >
+                    <LayoutGrid size={16} className="text-muted" />
+                    <Label>Dashboard</Label>
+                  </Dropdown.Item>
 
-                    <Separator className="my-1 bg-[#3B2418]/10 dark:bg-[#F2E8DA]/10" />
+                  <Separator className="my-1 bg-separator" />
 
-                    <Dropdown.Item
-                      id="dashboard"
-                      textValue="Dashboard"
-                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-[#3B2418] dark:text-[#F2E8DA] hover:bg-[#F2E8DA] dark:hover:bg-[#3B2418] cursor-pointer"
-                    >
-                      <LayoutGrid size={16} className="text-[#3B2418]/75 dark:text-[#F2E8DA]/75" />
-                      <Label>Dashboard</Label>
-                    </Dropdown.Item>
-
-                    <Separator className="my-1 bg-[#3B2418]/10 dark:bg-[#F2E8DA]/10" />
-
-                    <Dropdown.Item
-                      id="logout"
-                      textValue="Logout"
-                      variant="danger"
-                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-red-600 dark:text-red-400 hover:bg-red-500/10 cursor-pointer"
-                    >
-                      <LogOut size={16} />
-                      <Label>Logout</Label>
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown.Popover>
-              </Dropdown>
-            </div>
+                  <Dropdown.Item
+                    id="logout"
+                    textValue="Logout"
+                    variant="danger"
+                    className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-danger hover:bg-danger/10"
+                  >
+                    <LogOut size={16} />
+                    <Label>Logout</Label>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown.Popover>
+            </Dropdown>
           ) : (
-            <div className="flex items-center" style={{ gap: '1rem' }}>
+            <div className="hidden items-center gap-3 sm:flex">
               <Link
                 href="/login"
-                style={{
-                  padding: '0.4rem 0.6rem',
-                  color: 'rgba(242, 232, 218, 0.9)',
-                }}
-                className="flex items-center gap-2 text-sm font-medium hover:opacity-80 whitespace-nowrap transition-opacity"
+                className="flex items-center gap-2 whitespace-nowrap px-3 py-1.5 text-sm font-medium text-cream transition-opacity hover:opacity-80"
               >
-                <LogIn className="w-4 h-4" style={{ color: '#8EC5FF' }} />
+                <LogIn className="size-4 text-baby-blue" />
                 Login
               </Link>
               <Link
                 href="/register"
-                style={{
-                  padding: '0.5rem 1.35rem',
-                  backgroundColor: '#8EC5FF',
-                  color: '#3B2418',
-                }}
-                className="flex items-center gap-2 text-sm font-semibold hover:opacity-90 active:scale-[0.99] rounded-full whitespace-nowrap transition-all shadow-xs"
+                className="flex items-center gap-2 whitespace-nowrap rounded-full bg-baby-blue px-5 py-2 text-sm font-semibold text-brown shadow-xs transition-all hover:opacity-90 active:scale-[0.99]"
               >
-                <Rocket className="w-4 h-4" style={{ color: '#3B2418' }} />
+                <Rocket className="size-4" />
                 Get Started
               </Link>
             </div>
           )}
+
+          {/* Mobile Menu Toggle */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="cursor-pointer rounded-lg p-2 text-cream hover:bg-white/10 md:hidden"
+            aria-label="Toggle Menu"
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
       </div>
+
+      {mobileMenuOpen && (
+        <div className="flex flex-col gap-2 border-t border-cream/15 bg-brown px-[5%] py-4 md:hidden">
+          {visibleLinks.map(({ href, label, icon: Icon }) => {
+            const isActive = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-baby-blue font-semibold text-brown'
+                    : 'text-cream hover:bg-white/10'
+                }`}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
+
+          {!isPending && !user && (
+            <div className="mt-1 flex items-center gap-3 border-t border-cream/15 pt-3">
+              <Link
+                href="/login"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full border border-cream/25 px-4 py-2.5 text-sm font-medium text-cream hover:bg-white/10"
+              >
+                <LogIn size={16} className="text-baby-blue" />
+                <span>Login</span>
+              </Link>
+              <Link
+                href="/register"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-baby-blue px-4 py-2.5 text-sm font-semibold text-brown"
+              >
+                <Rocket size={16} />
+                <span>Get Started</span>
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 }

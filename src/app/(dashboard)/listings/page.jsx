@@ -11,6 +11,11 @@ import { getMyListings } from "@/lib/pets/data";
 import { deletePet, updatePet } from "@/lib/pets/action";
 import RequestsModal from "@/components/RequestsModal";
 
+const fieldInputClass =
+  "w-full rounded-xl border border-border bg-field p-2.5 text-sm text-field-foreground focus:outline-none focus:ring-2 focus:ring-focus";
+
+const fieldLabelClass = "text-xs font-semibold text-foreground/80";
+
 export default function ListingPage() {
   const { data: session } = useSession();
   const [pets, setPets] = useState([]);
@@ -80,109 +85,110 @@ export default function ListingPage() {
   };
 
   return (
-    <section
-      style={{
-        padding: "2.5rem 1.5rem 4rem",
-        backgroundColor: "#F2E8DA",
-        color: "#3B2418",
-      }}
-      className="min-h-screen w-full"
-    >
-      <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-        <h1 className="font-[Fraunces] text-3xl font-bold mb-6">
-          My Listings
-        </h1>
+    <section className="min-h-screen w-full bg-background px-6 pb-16 pt-10 text-foreground">
+      <div className="mx-auto max-w-[1000px]">
+        <h1 className="mb-6 font-serif text-3xl font-bold">My Listings</h1>
 
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="p-4 rounded-2xl bg-[#F9F4ED] border border-[#3B2418]/15 text-center">
-            <p className="text-xs opacity-70">Total Listings</p>
-            <p className="font-[Fraunces] text-2xl font-bold">{totalCount}</p>
+        <div className="mb-8 grid grid-cols-3 gap-4">
+          <div className="rounded-2xl border border-border bg-surface p-4 text-center">
+            <p className="text-xs text-surface-foreground/70">Total Listings</p>
+            <p className="font-serif text-2xl font-bold text-surface-foreground">
+              {totalCount}
+            </p>
           </div>
-          <div className="p-4 rounded-2xl bg-[#F9F4ED] border border-[#3B2418]/15 text-center">
-            <p className="text-xs opacity-70">Available</p>
-            <p className="font-[Fraunces] text-2xl font-bold">{availableCount}</p>
+          <div className="rounded-2xl border border-border bg-surface p-4 text-center">
+            <p className="text-xs text-surface-foreground/70">Available</p>
+            <p className="font-serif text-2xl font-bold text-surface-foreground">
+              {availableCount}
+            </p>
           </div>
-          <div className="p-4 rounded-2xl bg-[#F9F4ED] border border-[#3B2418]/15 text-center">
-            <p className="text-xs opacity-70">Adopted</p>
-            <p className="font-[Fraunces] text-2xl font-bold">{adoptedCount}</p>
+          <div className="rounded-2xl border border-border bg-surface p-4 text-center">
+            <p className="text-xs text-surface-foreground/70">Adopted</p>
+            <p className="font-serif text-2xl font-bold text-surface-foreground">
+              {adoptedCount}
+            </p>
           </div>
         </div>
 
         {loading ? (
-          <p className="text-sm">Loading your listings...</p>
+          <p className="text-sm text-foreground/75">Loading your listings...</p>
         ) : pets.length === 0 ? (
-          <div className="p-8 rounded-3xl bg-[#F9F4ED] border border-[#3B2418]/15 text-center">
-            <p className="text-sm mb-4">You haven&apos;t listed any pets yet.</p>
+          <div className="rounded-3xl border border-border bg-surface p-8 text-center">
+            <p className="mb-4 text-sm text-surface-foreground/85">
+              You haven&apos;t listed any pets yet.
+            </p>
             <Link
               href="/add-pet"
-              className="inline-block px-5 py-2.5 rounded-full bg-[#8EC5FF] text-[#3B2418] text-sm font-semibold"
+              className="inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground"
             >
               Add a Pet
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {pets.map((pet) => (
               <div
                 key={pet._id}
-                className="p-5 rounded-3xl bg-[#F9F4ED] border border-[#3B2418]/15 flex flex-col gap-4"
+                className="flex flex-col gap-4 rounded-3xl border border-border bg-surface p-5"
               >
                 <div className="flex items-center gap-4">
-                  <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-[#F2E8DA] shrink-0">
+                  <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-background">
                     <Image
                       src={pet.image}
                       alt={pet.name}
                       fill
                       sizes="80px"
-                      style={{ objectFit: "cover" }}
+                      className="object-cover"
                     />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <h2 className="font-[Fraunces] text-xl font-bold truncate">
+                      <h2 className="truncate font-serif text-xl font-bold text-surface-foreground">
                         {pet.name}
                       </h2>
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#8EC5FF] text-[#3B2418]">
+                      <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-accent-foreground">
                         {pet.status}
                       </span>
                     </div>
-                    <p className="text-sm font-semibold mt-1">${pet.fee}</p>
+                    <p className="mt-1 text-sm font-semibold text-surface-foreground">
+                      ${pet.fee}
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-2 border-t border-[#3B2418]/10">
+                <div className="flex flex-wrap gap-2 border-t border-separator pt-2">
                   <Button
                     size="sm"
                     onPress={() => setSelectedPetId(pet._id)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#8EC5FF] text-[#3B2418] text-xs font-semibold cursor-pointer"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-xs font-semibold text-accent-foreground"
                   >
-                    <FileText className="w-3.5 h-3.5" />
+                    <FileText className="size-3.5" />
                     Requests
                   </Button>
 
                   <Button
                     size="sm"
                     onPress={() => setEditingPet({ ...pet })}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F2E8DA] text-[#3B2418] text-xs font-semibold cursor-pointer"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border bg-background px-3.5 py-1.5 text-xs font-semibold text-foreground"
                   >
-                    <Pencil className="w-3.5 h-3.5" />
+                    <Pencil className="size-3.5" />
                     Edit
                   </Button>
 
                   <Link
                     href={`/pets/${pet._id}`}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F2E8DA] text-[#3B2418] text-xs font-semibold"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3.5 py-1.5 text-xs font-semibold text-foreground"
                   >
-                    <Eye className="w-3.5 h-3.5" />
+                    <Eye className="size-3.5" />
                     View
                   </Link>
 
                   <Button
                     size="sm"
                     onPress={() => setDeletingPet(pet)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-red-100 text-red-800 text-xs font-semibold cursor-pointer"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-danger/15 px-3.5 py-1.5 text-xs font-semibold text-danger"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="size-3.5" />
                     Delete
                   </Button>
                 </div>
@@ -203,90 +209,90 @@ export default function ListingPage() {
         isOpen={Boolean(editingPet)}
         onOpenChange={(open) => !open && setEditingPet(null)}
       >
-        <Modal.Backdrop>
+        <Modal.Backdrop className="bg-brown/45 backdrop-blur-sm">
           <Modal.Container>
-            <Modal.Dialog className="max-w-lg w-full p-6 rounded-3xl bg-[#F9F4ED] text-[#3B2418] max-h-[90vh] overflow-y-auto">
-              <Modal.CloseTrigger />
+            <Modal.Dialog className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-border bg-overlay p-6 text-overlay-foreground">
+              <Modal.CloseTrigger className="cursor-pointer rounded-full border border-border bg-background p-1.5 text-foreground transition-opacity hover:opacity-80" />
               <Modal.Header>
-                <Modal.Heading className="text-xl font-bold font-[Fraunces]">
+                <Modal.Heading className="font-serif text-xl font-bold text-foreground">
                   Edit Pet
                 </Modal.Heading>
               </Modal.Header>
 
               {editingPet && (
-                <form onSubmit={handleUpdate} className="flex flex-col gap-3 mt-3">
+                <form onSubmit={handleUpdate} className="mt-3 flex flex-col gap-3">
                   <TextField isRequired>
-                    <Label className="text-xs font-semibold">Pet Name</Label>
+                    <Label className={fieldLabelClass}>Pet Name</Label>
                     <Input
                       value={editingPet.name || ""}
                       onChange={(e) =>
                         setEditingPet({ ...editingPet, name: e.target.value })
                       }
-                      className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                      className={fieldInputClass}
                     />
                   </TextField>
 
                   <div className="grid grid-cols-2 gap-3">
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Species</Label>
+                      <Label className={fieldLabelClass}>Species</Label>
                       <Input
                         value={editingPet.species || ""}
                         onChange={(e) =>
                           setEditingPet({ ...editingPet, species: e.target.value })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Breed</Label>
+                      <Label className={fieldLabelClass}>Breed</Label>
                       <Input
-                                                value={editingPet.breed || ""}
+                        value={editingPet.breed || ""}
                         onChange={(e) =>
                           setEditingPet({ ...editingPet, breed: e.target.value })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Age</Label>
+                      <Label className={fieldLabelClass}>Age</Label>
                       <Input
                         type="number"
                         value={editingPet.age ?? 0}
                         onChange={(e) =>
                           setEditingPet({ ...editingPet, age: Number(e.target.value) })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Gender</Label>
+                      <Label className={fieldLabelClass}>Gender</Label>
                       <Input
                         value={editingPet.gender || ""}
                         onChange={(e) =>
                           setEditingPet({ ...editingPet, gender: e.target.value })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                   </div>
 
                   <TextField isRequired>
-                    <Label className="text-xs font-semibold">Image URL</Label>
+                    <Label className={fieldLabelClass}>Image URL</Label>
                     <Input
                       value={editingPet.image || ""}
                       onChange={(e) =>
                         setEditingPet({ ...editingPet, image: e.target.value })
                       }
-                      className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                      className={fieldInputClass}
                     />
                   </TextField>
 
                   <div className="grid grid-cols-2 gap-3">
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Health Status</Label>
+                      <Label className={fieldLabelClass}>Health Status</Label>
                       <Input
                         value={editingPet.healthStatus || ""}
                         onChange={(e) =>
@@ -295,11 +301,11 @@ export default function ListingPage() {
                             healthStatus: e.target.value,
                           })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Vaccination</Label>
+                      <Label className={fieldLabelClass}>Vaccination</Label>
                       <Input
                         value={editingPet.vaccinationStatus || ""}
                         onChange={(e) =>
@@ -308,50 +314,50 @@ export default function ListingPage() {
                             vaccinationStatus: e.target.value,
                           })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Location</Label>
+                      <Label className={fieldLabelClass}>Location</Label>
                       <Input
                         value={editingPet.location || ""}
                         onChange={(e) =>
                           setEditingPet({ ...editingPet, location: e.target.value })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                     <TextField isRequired>
-                      <Label className="text-xs font-semibold">Adoption Fee ($)</Label>
+                      <Label className={fieldLabelClass}>Adoption Fee ($)</Label>
                       <Input
                         type="number"
                         value={editingPet.fee ?? 0}
                         onChange={(e) =>
                           setEditingPet({ ...editingPet, fee: Number(e.target.value) })
                         }
-                        className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                        className={fieldInputClass}
                       />
                     </TextField>
                   </div>
 
                   <TextField isRequired>
-                    <Label className="text-xs font-semibold">Description</Label>
+                    <Label className={fieldLabelClass}>Description</Label>
                     <TextArea
                       rows={3}
                       value={editingPet.bio || ""}
                       onChange={(e) =>
                         setEditingPet({ ...editingPet, bio: e.target.value })
                       }
-                      className="w-full p-2.5 rounded-xl bg-[#F2E8DA] text-sm"
+                      className={fieldInputClass}
                     />
                   </TextField>
 
                   <Button
                     type="submit"
-                    className="w-full mt-2 rounded-full bg-[#8EC5FF] text-[#3B2418] font-semibold cursor-pointer"
+                    className="mt-2 w-full cursor-pointer rounded-full bg-accent py-2.5 font-semibold text-accent-foreground"
                   >
                     Save Changes
                   </Button>
@@ -366,28 +372,28 @@ export default function ListingPage() {
         isOpen={Boolean(deletingPet)}
         onOpenChange={(open) => !open && setDeletingPet(null)}
       >
-        <Modal.Backdrop>
+        <Modal.Backdrop className="bg-brown/45 backdrop-blur-sm">
           <Modal.Container>
-            <Modal.Dialog className="max-w-sm w-full p-6 rounded-3xl bg-[#F9F4ED] text-[#3B2418]">
-              <Modal.CloseTrigger />
+            <Modal.Dialog className="w-full max-w-sm rounded-3xl border border-border bg-overlay p-6 text-overlay-foreground">
+              <Modal.CloseTrigger className="cursor-pointer rounded-full border border-border bg-background p-1.5 text-foreground transition-opacity hover:opacity-80" />
               <Modal.Header>
-                <Modal.Heading className="text-xl font-bold font-[Fraunces]">
+                <Modal.Heading className="font-serif text-xl font-bold text-foreground">
                   Delete {deletingPet?.name}?
                 </Modal.Heading>
               </Modal.Header>
-              <Modal.Body className="text-sm mt-2">
+              <Modal.Body className="mt-2 text-sm text-overlay-foreground/85">
                 Are you sure you want to delete this pet listing? This cannot be undone.
               </Modal.Body>
-              <Modal.Footer className="flex gap-2 mt-4">
+              <Modal.Footer className="mt-4 flex gap-2">
                 <Button
                   onPress={() => setDeletingPet(null)}
-                  className="flex-1 rounded-full bg-[#F2E8DA] text-[#3B2418] font-semibold cursor-pointer"
+                  className="flex-1 cursor-pointer rounded-full border border-border bg-background py-2 font-semibold text-foreground"
                 >
                   Cancel
                 </Button>
                 <Button
                   onPress={handleDelete}
-                  className="flex-1 rounded-full bg-red-600 text-white font-semibold cursor-pointer"
+                  className="flex-1 cursor-pointer rounded-full bg-danger py-2 font-semibold text-danger-foreground"
                 >
                   Delete
                 </Button>

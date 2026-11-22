@@ -25,7 +25,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
+      <body className="min-h-full flex flex-col bg-background font-sans text-foreground">
       <PageTransition>
         <Navbar />
         <main className="w-full flex-1 flex flex-col">
@@ -38,4 +38,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-

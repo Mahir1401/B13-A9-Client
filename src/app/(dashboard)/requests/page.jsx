@@ -10,6 +10,12 @@ import { getMyRequests } from "@/lib/pets/data";
 import { cancelAdoptionRequest } from "@/lib/pets/action";
 import Loading from "@/components/Loading";
 
+function getStatusClasses(status) {
+  if (status === "approved") return "bg-accent text-accent-foreground";
+  if (status === "rejected") return "bg-danger/15 text-danger";
+  return "bg-surface text-surface-foreground";
+}
+
 export default function RequestsPage() {
   const { data: session } = useSession();
   const [requests, setRequests] = useState([]);
@@ -46,27 +52,20 @@ export default function RequestsPage() {
   };
 
   return (
-    <section
-      style={{
-        padding: "2.5rem 1.5rem 4rem",
-        backgroundColor: "#F2E8DA",
-        color: "#3B2418",
-      }}
-      className="min-h-screen w-full"
-    >
-      <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-        <h1 className="font-[Fraunces] text-3xl font-bold mb-6">
-          My Requests
-        </h1>
+    <section className="min-h-screen w-full bg-background px-6 pb-16 pt-10 text-foreground">
+      <div className="mx-auto max-w-[900px]">
+        <h1 className="mb-6 font-serif text-3xl font-bold">My Requests</h1>
 
         {loading ? (
-          <Loading />
+          <Loading fullScreen={false} />
         ) : requests.length === 0 ? (
-          <div className="p-8 rounded-3xl bg-[#F9F4ED] border border-[#3B2418]/15 text-center">
-            <p className="text-sm mb-4">You haven&apos;t submitted any adoption requests yet.</p>
+          <div className="rounded-3xl border border-border bg-surface p-8 text-center">
+            <p className="mb-4 text-sm text-surface-foreground/85">
+              You haven&apos;t submitted any adoption requests yet.
+            </p>
             <Link
               href="/pets"
-              className="inline-block px-5 py-2.5 rounded-full bg-[#8EC5FF] text-[#3B2418] text-sm font-semibold"
+              className="inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground"
             >
               Browse Pets
             </Link>
@@ -76,12 +75,10 @@ export default function RequestsPage() {
             {requests.map((req) => (
               <div
                 key={req._id}
-                className="p-5 rounded-3xl bg-[#F9F4ED] border border-[#3B2418]/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-surface p-5 sm:flex-row sm:items-center"
               >
-                <div className="flex flex-col gap-1 text-sm">
-                  <h2 className="font-[Fraunces] text-lg font-bold">
-                    {req.petName}
-                  </h2>
+                <div className="flex flex-col gap-1 text-sm text-surface-foreground">
+                  <h2 className="font-serif text-lg font-bold">{req.petName}</h2>
                   <p>
                     <strong>Request Date:</strong> {req.requestDate}
                   </p>
@@ -91,34 +88,30 @@ export default function RequestsPage() {
                   <p className="capitalize">
                     <strong>Status:</strong>{" "}
                     <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                        req.status === "approved"
-                          ? "bg-[#8EC5FF] text-[#3B2418]"
-                          : req.status === "rejected"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-[#F2E8DA] text-[#3B2418]"
-                      }`}
+                      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${getStatusClasses(
+                        req.status
+                      )}`}
                     >
                       {req.status}
                     </span>
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2.5 shrink-0">
+                <div className="flex shrink-0 items-center gap-2.5">
                   <Link
                     href={`/pets/${req.petId}`}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#F2E8DA] border border-[#3B2418]/20 text-xs font-semibold hover:opacity-85"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold text-foreground hover:opacity-85"
                   >
-                    <Eye className="w-3.5 h-3.5" />
+                    <Eye className="size-3.5" />
                     View
                   </Link>
 
                   <Button
                     size="sm"
                     onPress={() => handleCancel(req._id)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-100 text-red-800 text-xs font-semibold cursor-pointer hover:opacity-85"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-danger/15 px-4 py-2 text-xs font-semibold text-danger hover:opacity-85"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="size-3.5" />
                     Cancel
                   </Button>
                 </div>

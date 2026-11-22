@@ -1,190 +1,113 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
-
-:root {
+/*
+ * Brand palette + fonts -> Tailwind utilities
+ *   bg-brown, text-cream, bg-baby-blue, bg-cream-light ...
+ *   font-sans  -> Geist     (--font-geist-sans, set by next/font in layout.js)
+ *   font-serif -> Fraunces  (--font-fraunces,   set by next/font in layout.js)
+ */
+@theme static {
   --color-brown: #3B2418;
   --color-cream: #F2E8DA;
+  --color-cream-light: #FAF5EC;
   --color-baby-blue: #8EC5FF;
 
-  --color-cream-light: #F9F4ED;      
-  --color-brown-muted: rgba(59, 36, 24, 0.7);
-  --color-border: rgba(59, 36, 24, 0.2);
-
-  --font-serif: 'Georgia', 'Playfair Display', serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
+/*
+ * HeroUI Theme Customization (brown / cream / baby blue)
+ * @see https://heroui.com/docs/react/getting-started/theming
+ *
+ * HeroUI semantic classes now follow this palette automatically:
+ *   bg-background  bg-surface  bg-accent  bg-field  bg-default
+ *   text-foreground  text-muted  text-accent-foreground
+ *   border-border  border-separator
+ * Light/dark switching happens through these variables, so components do not
+ * need dark: variants for colors.
+ */
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root,
+.light,
+.default,
+[data-theme="light"],
+[data-theme="default"] {
+  /* Theme Colors (Light Mode) */
+  --accent: #8EC5FF;
+  --accent-foreground: #3B2418;
+  --background: #F2E8DA;
+  --border: #DDD0BE;
+  --danger: oklch(65.32% 0.2335 25.74);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: #E8DCCA;
+  --default-foreground: #3B2418;
+  --field-background: #FAF5EC;
+  --field-border: transparent;
+  --field-foreground: #3B2418;
+  --field-placeholder: #8A7565;
+  --focus: #8EC5FF;
+  --foreground: #3B2418;
+  --muted: #7A6455;
+  --overlay: #FAF5EC;
+  --overlay-foreground: #3B2418;
+  --scrollbar: #D3C5B0;
+  --segment: #FAF5EC;
+  --segment-foreground: #3B2418;
+  --separator: #E3D6C4;
+  --success: oklch(73.29% 0.1941 150.81);
+  --success-foreground: oklch(21.03% 0.0059 150.81);
+  --surface: #FAF5EC;
+  --surface-foreground: #3B2418;
+  --surface-secondary: #EFE4D3;
+  --surface-secondary-foreground: #3B2418;
+  --surface-tertiary: #E8DCCA;
+  --surface-tertiary-foreground: #3B2418;
+  --warning: oklch(78.19% 0.1590 72.33);
+  --warning-foreground: oklch(21.03% 0.0059 72.33);
+
+  /* Border Radius */
+  --radius: 0.5rem;
+  --field-radius: 0.75rem;
+
+  /* Font Family (Geist, loaded in layout.js) */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-body {
-  background-color: var(--color-cream);
-  color: var(--color-brown);
-  font-family: var(--font-sans);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
-
-.announcement-bar {
-  background-color: var(--color-brown);
-  color: var(--color-cream);
-  text-align: center;
-  font-size: 0.75rem;
-  padding: 0.5rem 1rem;
-  letter-spacing: 0.03em;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 5%;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.navbar .brand-logo {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-brown);
-  text-decoration: none;
-}
-
-.navbar .nav-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-  font-size: 0.9rem;
-}
-
-.navbar a {
-  color: var(--color-brown);
-  text-decoration: none;
-}
-
-
-.product-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  max-width: 1200px;
-  margin: 3rem auto;
-  padding: 0 5%;
-}
-
-.product-image-card {
-  background-color: var(--color-cream-light);
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-}
-
-.product-image-card img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-
-.badge {
-  display: inline-block;
-  background-color: var(--color-cream-light);
-  color: var(--color-brown);
-  border: 1px solid var(--color-border);
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  margin-bottom: 0.75rem;
-}
-
-.product-title {
-  font-family: var(--font-serif);
-  font-size: 2.5rem;
-  font-weight: 400;
-  line-height: 1.15;
-  margin-bottom: 0.5rem;
-}
-
-.product-price {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 1rem 0;
-}
-
-.product-description {
-  color: var(--color-brown-muted);
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
-}
-
-.size-selector {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.size-option {
-  flex: 1;
-  background-color: transparent;
-  color: var(--color-brown);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 0.65rem;
-  text-align: center;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.size-option.active,
-.size-option:hover {
-  border-color: var(--color-brown);
-  background-color: var(--color-cream-light);
-  font-weight: 600;
-}
-
-.btn-primary {
-  width: 100%;
-  background-color: var(--color-baby-blue);
-  color: var(--color-brown);
-  border: none;
-  border-radius: 999px;
-  padding: 1rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-baby-blue-hover);
-}
-
-.btn-primary:active {
-  transform: scale(0.99);
-}
-
-
-.review-box {
-  background-color: var(--color-cream-light);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
-}
-
-
-@media (max-width: 768px) {
-  .product-container {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  /* Theme Colors (Dark Mode) */
+  --accent: #8EC5FF;
+  --accent-foreground: #3B2418;
+  --background: #1E120C;
+  --border: #4A3426;
+  --danger: oklch(59.40% 0.1973 24.63);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: #3B2418;
+  --default-foreground: #F2E8DA;
+  --field-background: #2A1A12;
+  --field-border: transparent;
+  --field-foreground: #F2E8DA;
+  --field-placeholder: #B9A592;
+  --focus: #8EC5FF;
+  --foreground: #F2E8DA;
+  --muted: #B9A592;
+  --overlay: #2A1A12;
+  --overlay-foreground: #F2E8DA;
+  --scrollbar: #6B5242;
+  --segment: #4A3426;
+  --segment-foreground: #F2E8DA;
+  --separator: #33221A;
+  --success: oklch(73.29% 0.1941 150.81);
+  --success-foreground: oklch(21.03% 0.0059 150.81);
+  --surface: #2A1A12;
+  --surface-foreground: #F2E8DA;
+  --surface-secondary: #33221A;
+  --surface-secondary-foreground: #F2E8DA;
+  --surface-tertiary: #3B2A20;
+  --surface-tertiary-foreground: #F2E8DA;
+  --warning: oklch(82.03% 0.1392 76.34);
+  --warning-foreground: oklch(21.03% 0.0059 76.34);
 }

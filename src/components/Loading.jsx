@@ -2,10 +2,14 @@
 
 import { Spinner } from "@heroui/react";
 
-export default function Loading() {
+export default function Loading({ fullScreen = true }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-card)]">
-      <Spinner size="lg" className="text-[var(--color-moss)] animate-spin" />
+    <div
+      className={`flex items-center justify-center bg-background ${
+        fullScreen ? "min-h-screen" : "py-10"
+      }`}
+    >
+      <Spinner size="lg" color="accent" />
     </div>
   );
 }
