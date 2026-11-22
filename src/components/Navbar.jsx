@@ -13,8 +13,6 @@ import {
   LogOut,
   LogIn,
   Rocket,
-  ClipboardList,
-  PlusCircle,
   Menu,
   X,
 } from 'lucide-react';
@@ -59,7 +57,7 @@ export default function Navbar() {
 
   const handleMenuAction = (key) => {
     if (key === 'dashboard') {
-      router.push('/my-listings');
+      router.push('/requests');
     } else if (key === 'logout') {
       handleLogout();
     }
