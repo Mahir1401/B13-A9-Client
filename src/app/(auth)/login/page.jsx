@@ -8,6 +8,12 @@ import { authClient, signIn } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 
+const inputClass =
+  "w-full rounded-xl border border-border bg-field px-4 py-2.5 text-sm text-field-foreground placeholder:text-field-placeholder focus:outline-none focus:ring-2 focus:ring-focus transition-all";
+
+const labelClass =
+  "text-xs font-semibold uppercase tracking-wider text-foreground/80";
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,31 +51,13 @@ function LoginForm() {
   };
 
   return (
-    <section className="min-h-screen w-full flex items-center justify-center bg-[#F2E8DA] dark:bg-[#23150E] p-6">
-      <div
-        style={{
-          maxWidth: "420px",
-          width: "100%",
-          padding: "2.75rem 2.25rem",
-        }}
-        className="bg-[#F9F4ED] dark:bg-[#2B1A11] border border-[#3B2418]/15 dark:border-[#F2E8DA]/15 rounded-3xl shadow-sm flex flex-col"
-      >
-        <div style={{ marginBottom: "1.75rem" }} className="text-center">
-          <p
-            style={{
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              padding: "0.3rem 1rem",
-              marginBottom: "0.75rem",
-            }}
-            className="inline-block rounded-full text-sm font-bold border border-[#3B2418]/20"
-          >
-            Welcome <strong style={{ color: "#8EC5FF" }}>Back</strong>
+    <section className="flex min-h-screen w-full items-center justify-center bg-background p-6">
+      <div className="flex w-full max-w-[420px] flex-col rounded-3xl border border-border bg-surface px-9 py-11 shadow-sm">
+        <div className="mb-7 text-center">
+          <p className="mb-3 inline-block rounded-full border border-border bg-background px-4 py-1.5 text-sm font-bold text-surface-foreground">
+            Welcome <strong className="text-baby-blue">Back</strong>
           </p>
-          <h2
-            style={{ color: "#3B2418" }}
-            className="text-3xl font-bold font-[Fraunces] dark:!text-[#F2E8DA] tracking-tight"
-          >
+          <h2 className="font-serif text-3xl font-bold tracking-tight text-surface-foreground">
             Sign In
           </h2>
         </div>
@@ -87,24 +75,13 @@ function LoginForm() {
             }}
             className="flex flex-col gap-1.5"
           >
-            <Label
-              style={{ color: "#3B2418" }}
-              className="text-xs font-semibold uppercase tracking-wider opacity-80"
-            >
-              Email
-            </Label>
+            <Label className={labelClass}>Email</Label>
             <Input
               placeholder="you@example.com"
               autoComplete="email"
-              style={{
-                padding: "0.7rem 1rem",
-                backgroundColor: "#F2E8DA",
-                color: "#3B2418",
-                border: "1px solid rgba(59, 36, 24, 0.25)",
-              }}
-              className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
+              className={inputClass}
             />
-            <FieldError className="text-xs text-red-600 dark:text-red-400" />
+            <FieldError className="text-xs text-danger" />
           </TextField>
 
           <TextField
@@ -120,69 +97,38 @@ function LoginForm() {
             }}
             className="flex flex-col gap-1.5"
           >
-            <Label
-              style={{ color: "#3B2418" }}
-              className="text-xs font-semibold uppercase tracking-wider opacity-80"
-            >
-              Password
-            </Label>
+            <Label className={labelClass}>Password</Label>
             <Input
               placeholder="••••••••"
               autoComplete="current-password"
-              style={{
-                padding: "0.7rem 1rem",
-                backgroundColor: "#F2E8DA",
-                color: "#3B2418",
-                border: "1px solid rgba(59, 36, 24, 0.25)",
-              }}
-              className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
+              className={inputClass}
             />
-            <FieldError className="text-xs text-red-600 dark:text-red-400" />
+            <FieldError className="text-xs text-danger" />
           </TextField>
 
           <Button
             type="submit"
-            style={{
-              backgroundColor: "#8EC5FF",
-              color: "#3B2418",
-              padding: "0.85rem 1.5rem",
-              marginTop: "0.5rem",
-              cursor: "pointer",
-            }}
-            className="w-full flex items-center justify-center gap-2 font-semibold text-sm rounded-full hover:opacity-90 active:scale-[0.99] transition-all shadow-xs"
+            className="mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground shadow-xs transition-all hover:opacity-90 active:scale-[0.99]"
           >
-            <LogIn className="w-4 h-4" />
+            <LogIn className="size-4" />
             Sign In
           </Button>
         </Form>
 
-        <div
-          style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}
-          className="flex items-center gap-4"
-        >
-          <div className="h-[1px] flex-1 bg-[#3B2418]/15 dark:bg-[#F2E8DA]/15" />
-          <span
-            style={{ color: "rgba(59, 36, 24, 0.6)" }}
-            className="text-xs uppercase tracking-wider font-medium dark:!text-[#F2E8DA]/60"
-          >
+        <div className="my-6 flex items-center gap-4">
+          <div className="h-px flex-1 bg-separator" />
+          <span className="text-xs font-medium uppercase tracking-wider text-muted">
             or
           </span>
-          <div className="h-[1px] flex-1 bg-[#3B2418]/15 dark:bg-[#F2E8DA]/15" />
+          <div className="h-px flex-1 bg-separator" />
         </div>
 
         <Button
           type="button"
           onPress={handleGoogleSignin}
-          style={{
-            backgroundColor: "#FFFFFF",
-            color: "#3B2418",
-            padding: "0.85rem 1.5rem",
-            border: "1px solid rgba(59, 36, 24, 0.2)",
-            cursor: "pointer",
-          }}
-          className="w-full flex items-center justify-center gap-2.5 font-semibold text-sm rounded-full hover:opacity-90 active:scale-[0.99] transition-all shadow-xs"
+          className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-border bg-cream-light px-6 py-3.5 text-sm font-semibold text-brown shadow-xs transition-all hover:opacity-90 active:scale-[0.99]"
         >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
+          <svg className="size-4" viewBox="0 0 24 24" aria-hidden="true">
             <path
               fill="#4285F4"
               d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"
@@ -203,18 +149,11 @@ function LoginForm() {
           Continue with Google
         </Button>
 
-        <p
-          style={{
-            marginTop: "1.5rem",
-            color: "rgba(59, 36, 24, 0.75)",
-          }}
-          className="text-xs text-center"
-        >
+        <p className="mt-6 text-center text-xs text-foreground/75">
           Don&apos;t have an account?{" "}
           <Link
             href="/register"
-            style={{ color: "#3B2418" }}
-            className="font-semibold underline hover:opacity-80"
+            className="font-semibold text-foreground underline hover:opacity-80"
           >
             Create one
           </Link>

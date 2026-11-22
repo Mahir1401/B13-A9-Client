@@ -67,17 +67,13 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Home', icon: Home, private: false },
-    { href: '/pets', label: 'All Pets', icon: Search, private: false },
-    { href: '/requests', label: 'My Requests', icon: ClipboardList, private: true },
-    { href: '/add-pet', label: 'Add Pet', icon: PlusCircle, private: true },
+    { href: '/pets', label: 'All Pets', icon: Search, private: false }
   ];
 
-  const visibleLinks = navLinks.filter((link) => !link.private || Boolean(user));
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-cream/15 bg-brown transition-colors">
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Logo + Website Name */}
         <Link href="/" className="group flex items-center gap-2.5">
           <PawPrint className="size-8 rounded-full border-2 border-baby-blue p-1 text-baby-blue transition-transform group-hover:scale-105" />
           <span className="font-serif text-[1.35rem] font-bold tracking-[-0.02em] text-cream">
@@ -85,9 +81,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Nav Links */}
         <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
-          {visibleLinks.map(({ href, label, icon: Icon }) => {
+          {navLinks.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
             return (
               <Link
@@ -106,7 +101,6 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right Controls */}
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -205,7 +199,6 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Mobile Menu Toggle */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -219,7 +212,7 @@ export default function Navbar() {
 
       {mobileMenuOpen && (
         <div className="flex flex-col gap-2 border-t border-cream/15 bg-brown px-[5%] py-4 md:hidden">
-          {visibleLinks.map(({ href, label, icon: Icon }) => {
+          {navLinks.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
             return (
               <Link

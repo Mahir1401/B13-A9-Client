@@ -15,6 +15,12 @@ import { useRouter } from "next/navigation";
 import { signUp, signIn } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 
+const inputClass =
+  "w-full rounded-xl border border-border bg-field px-4 py-2.5 text-sm text-field-foreground placeholder:text-field-placeholder focus:outline-none focus:ring-2 focus:ring-focus transition-all";
+
+const labelClass =
+  "text-xs font-semibold uppercase tracking-wider text-foreground/80";
+
 export default function Register() {
   const router = useRouter();
   const [password, setPassword] = useState("");
@@ -61,33 +67,17 @@ export default function Register() {
   };
 
   return (
-    <section className="min-h-screen w-full flex items-center justify-center bg-[#F2E8DA] dark:bg-[#23150E] p-6">
+    <section className="flex min-h-screen w-full items-center justify-center bg-background p-6">
       <Form
         onSubmit={handleRegister}
         onReset={() => setPassword("")}
-        style={{
-          maxWidth: "420px",
-          width: "100%",
-          padding: "2.75rem 2.25rem",
-        }}
-        className="bg-[#F9F4ED] dark:bg-[#2B1A11] border border-[#3B2418]/15 dark:border-[#F2E8DA]/15 rounded-3xl shadow-sm flex flex-col gap-5"
+        className="flex w-full max-w-[420px] flex-col gap-5 rounded-3xl border border-border bg-surface px-9 py-11 shadow-sm"
       >
         <div className="mb-1 text-center">
-          <p
-            style={{
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              padding: "0.3rem 1rem",
-              marginBottom: "0.75rem",
-            }}
-            className="inline-block rounded-full text-sm font-bold border border-[#3B2418]/20"
-          >
-            Join <strong style={{ color: "#8EC5FF" }}>PetNest</strong>
+          <p className="mb-3 inline-block rounded-full border border-border bg-background px-4 py-1.5 text-sm font-bold text-surface-foreground">
+            Join <strong className="text-baby-blue">PetNest</strong>
           </p>
-          <h2
-            style={{ color: "#3B2418" }}
-            className="text-3xl font-bold font-[Fraunces] dark:!text-[#F2E8DA] tracking-tight"
-          >
+          <h2 className="font-serif text-3xl font-bold tracking-tight text-surface-foreground">
             Create an Account
           </h2>
         </div>
@@ -105,23 +95,9 @@ export default function Register() {
           }}
           className="flex flex-col gap-1.5"
         >
-          <Label
-            style={{ color: "#3B2418" }}
-            className="text-xs font-semibold uppercase tracking-wider opacity-80"
-          >
-            Name
-          </Label>
-          <Input
-            placeholder="e.g. Alex Paws"
-            style={{
-              padding: "0.7rem 1rem",
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              border: "1px solid rgba(59, 36, 24, 0.25)",
-            }}
-            className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
-          />
-          <FieldError className="text-xs text-red-600 dark:text-red-400" />
+          <Label className={labelClass}>Name</Label>
+          <Input placeholder="e.g. Alex Paws" className={inputClass} />
+          <FieldError className="text-xs text-danger" />
         </TextField>
 
         <TextField
@@ -136,23 +112,9 @@ export default function Register() {
           }}
           className="flex flex-col gap-1.5"
         >
-          <Label
-            style={{ color: "#3B2418" }}
-            className="text-xs font-semibold uppercase tracking-wider opacity-80"
-          >
-            Email
-          </Label>
-          <Input
-            placeholder="you@example.com"
-            style={{
-              padding: "0.7rem 1rem",
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              border: "1px solid rgba(59, 36, 24, 0.25)",
-            }}
-            className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
-          />
-          <FieldError className="text-xs text-red-600 dark:text-red-400" />
+          <Label className={labelClass}>Email</Label>
+          <Input placeholder="you@example.com" className={inputClass} />
+          <FieldError className="text-xs text-danger" />
         </TextField>
 
         <TextField
@@ -172,23 +134,9 @@ export default function Register() {
           }}
           className="flex flex-col gap-1.5"
         >
-          <Label
-            style={{ color: "#3B2418" }}
-            className="text-xs font-semibold uppercase tracking-wider opacity-80"
-          >
-            Photo URL
-          </Label>
-          <Input
-            placeholder="https://example.com"
-            style={{
-              padding: "0.7rem 1rem",
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              border: "1px solid rgba(59, 36, 24, 0.25)",
-            }}
-            className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
-          />
-          <FieldError className="text-xs text-red-600 dark:text-red-400" />
+          <Label className={labelClass}>Photo URL</Label>
+          <Input placeholder="https://example.com" className={inputClass} />
+          <FieldError className="text-xs text-danger" />
         </TextField>
 
         <TextField
@@ -212,29 +160,12 @@ export default function Register() {
           }}
           className="flex flex-col gap-1.5"
         >
-          <Label
-            style={{ color: "#3B2418" }}
-            className="text-xs font-semibold uppercase tracking-wider opacity-80"
-          >
-            Password
-          </Label>
-          <Input
-            placeholder="••••••••"
-            style={{
-              padding: "0.7rem 1rem",
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              border: "1px solid rgba(59, 36, 24, 0.25)",
-            }}
-            className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
-          />
-          <Description
-            style={{ color: "rgba(59, 36, 24, 0.65)" }}
-            className="text-xs"
-          >
+          <Label className={labelClass}>Password</Label>
+          <Input placeholder="••••••••" className={inputClass} />
+          <Description className="text-xs text-muted">
             At least 6 characters with 1 uppercase and 1 lowercase letter
           </Description>
-          <FieldError className="text-xs text-red-600 dark:text-red-400" />
+          <FieldError className="text-xs text-danger" />
         </TextField>
 
         <TextField
@@ -249,75 +180,41 @@ export default function Register() {
           }}
           className="flex flex-col gap-1.5"
         >
-          <Label
-            style={{ color: "#3B2418" }}
-            className="text-xs font-semibold uppercase tracking-wider opacity-80"
-          >
-            Confirm Password
-          </Label>
-          <Input
-            placeholder="••••••••"
-            style={{
-              padding: "0.7rem 1rem",
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              border: "1px solid rgba(59, 36, 24, 0.25)",
-            }}
-            className="w-full rounded-xl placeholder:text-[#3B2418]/45 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B2418]/30 transition-all"
-          />
-          <FieldError className="text-xs text-red-600 dark:text-red-400" />
+          <Label className={labelClass}>Confirm Password</Label>
+          <Input placeholder="••••••••" className={inputClass} />
+          <FieldError className="text-xs text-danger" />
         </TextField>
 
-        <div className="flex gap-2.5 mt-2">
+        <div className="mt-2 flex gap-2.5">
           <Button
             type="submit"
-            style={{
-              backgroundColor: "#8EC5FF",
-              color: "#3B2418",
-              padding: "0.8rem 1.25rem",
-            }}
-            className="flex-1 flex items-center justify-center gap-2 font-semibold text-sm rounded-full hover:opacity-90 active:scale-[0.99] transition-all cursor-pointer shadow-xs"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-5 py-3.5 text-sm font-semibold text-accent-foreground shadow-xs transition-all hover:opacity-90 active:scale-[0.99]"
           >
-            <CheckCheck className="w-4 h-4" /> Register
+            <CheckCheck className="size-4" /> Register
           </Button>
           <Button
             type="reset"
             variant="secondary"
-            style={{
-              backgroundColor: "#F2E8DA",
-              color: "#3B2418",
-              padding: "0.8rem 1.25rem",
-              border: "1px solid rgba(59, 36, 24, 0.25)",
-            }}
-            className="rounded-full text-sm font-semibold hover:opacity-80 transition-all cursor-pointer"
+            className="cursor-pointer rounded-full border border-border bg-background px-5 py-3.5 text-sm font-semibold text-foreground transition-all hover:opacity-80"
           >
             Reset
           </Button>
         </div>
 
-        <div className="flex items-center gap-3 my-0.5">
-          <div className="h-px flex-1 bg-[#3B2418]/15 dark:bg-[#F2E8DA]/15" />
-          <span
-            style={{ color: "rgba(59, 36, 24, 0.6)" }}
-            className="text-xs uppercase font-semibold tracking-wider"
-          >
+        <div className="my-0.5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-separator" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted">
             or
           </span>
-          <div className="h-px flex-1 bg-[#3B2418]/15 dark:bg-[#F2E8DA]/15" />
+          <div className="h-px flex-1 bg-separator" />
         </div>
 
         <Button
           type="button"
           onPress={handleGoogleSignIn}
-          style={{
-            backgroundColor: "#FFFFFF",
-            color: "#3B2418",
-            padding: "0.8rem 1.25rem",
-            border: "1px solid rgba(59, 36, 24, 0.25)",
-          }}
-          className="w-full flex items-center justify-center gap-2.5 font-semibold text-sm rounded-full hover:opacity-90 active:scale-[0.99] transition-all cursor-pointer shadow-xs"
+          className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-border bg-cream-light px-5 py-3.5 text-sm font-semibold text-brown shadow-xs transition-all hover:opacity-90 active:scale-[0.99]"
         >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
+          <svg className="size-4" viewBox="0 0 24 24">
             <path
               fill="#4285F4"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -338,18 +235,11 @@ export default function Register() {
           Continue with Google
         </Button>
 
-        <p
-          style={{
-            marginTop: "0.75rem",
-            color: "rgba(59, 36, 24, 0.75)",
-          }}
-          className="text-xs text-center"
-        >
+        <p className="mt-3 text-center text-xs text-foreground/75">
           Already have an account?{" "}
           <Link
             href="/login"
-            style={{ color: "#3B2418" }}
-            className="font-semibold underline hover:opacity-80"
+            className="font-semibold text-foreground underline hover:opacity-80"
           >
             Log in
           </Link>

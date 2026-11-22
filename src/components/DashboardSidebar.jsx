@@ -33,7 +33,6 @@ export default function DashboardSidebar() {
 
   return (
     <>
-      {/* Mobile: dropdown */}
       <div className="w-full border-b border-border bg-surface px-4 py-3.5 md:hidden">
         <Dropdown>
           <Dropdown.Trigger className="flex w-full cursor-pointer items-center justify-between rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-xs outline-none">
@@ -77,7 +76,6 @@ export default function DashboardSidebar() {
         </Dropdown>
       </div>
 
-      {/* Desktop: sidebar */}
       <aside className="hidden min-h-[calc(100vh-4.5rem)] w-64 shrink-0 border-r border-border bg-surface px-4 py-6 transition-colors md:block">
         <p className="mb-3.5 px-3.5 text-xs font-semibold uppercase tracking-wider text-muted">
           Menu
