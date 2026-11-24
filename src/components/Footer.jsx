@@ -7,7 +7,7 @@ const exploreLinks = [
   { label: "Home", href: "/" },
   { label: "All Pets", href: "/pets" },
   { label: "Sign In", href: "/login" },
-  { label: "Create an Account", href: "/signup" },
+  { label: "Create an Account", href: "/register" },
 ];
 
 const socialLinks = [

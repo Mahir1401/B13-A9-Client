@@ -2,20 +2,7 @@
 
 import { signOut, useSession } from '@/lib/auth-client';
 import { Button, Dropdown, Header, Label, Separator, useTheme } from '@heroui/react';
-import {
-  Home,
-  Moon,
-  PawPrint,
-  Search,
-  Sun,
-  ChevronDown,
-  LayoutGrid,
-  LogOut,
-  LogIn,
-  Rocket,
-  Menu,
-  X,
-} from 'lucide-react';
+import { Home, Moon, PawPrint, Search, Sun, ChevronDown, LayoutGrid, LogOut, LogIn, Rocket, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -50,7 +37,6 @@ export default function Navbar() {
       router.push('/');
       router.refresh();
     } catch (error) {
-      console.error('Logout failed:', error);
       toast.error('Failed to log out');
     }
   };
@@ -64,8 +50,8 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: '/', label: 'Home', icon: Home, private: false },
-    { href: '/pets', label: 'All Pets', icon: Search, private: false }
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/pets', label: 'All Pets', icon: Search }
   ];
 
 
@@ -120,8 +106,8 @@ export default function Navbar() {
                 className="group flex cursor-pointer items-center gap-2 bg-transparent p-0 focus:outline-none"
               >
                 <Image
-                  src={user.image || '/image_pgdFnZ.png'}
-                  alt={user.name || 'User Profile'}
+                  src={user.image}
+                  alt={user.name}
                   referrerPolicy="no-referrer"
                   className="size-8 rounded-full border-2 border-baby-blue object-cover"
                   height={32}
