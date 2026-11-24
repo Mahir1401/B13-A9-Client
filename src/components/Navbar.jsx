@@ -227,25 +227,6 @@ export default function Navbar() {
               </Link>
             );
           })}
-
-          {!isPending && !user && (
-            <div className="mt-1 flex items-center gap-3 border-t border-cream/15 pt-3">
-              <Link
-                href="/login"
-                className="flex flex-1 items-center justify-center gap-2 rounded-full border border-cream/25 px-4 py-2.5 text-sm font-medium text-cream hover:bg-white/10"
-              >
-                <LogIn size={16} className="text-baby-blue" />
-                <span>Login</span>
-              </Link>
-              <Link
-                href="/register"
-                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-baby-blue px-4 py-2.5 text-sm font-semibold text-brown"
-              >
-                <Rocket size={16} />
-                <span>Get Started</span>
-              </Link>
-            </div>
-          )}
         </div>
       )}
     </header>

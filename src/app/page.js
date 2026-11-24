@@ -4,7 +4,7 @@ import WhyAdopt from "@/components/WhyAdopt";
 import HowItWorks from "@/components/HowItWorks";
 import SuccessStories from "@/components/SuccessStories";
 import PetCareTips from "@/components/PetCareTips";
-import CommunityCTA from "@/components/CommunityCTA";
+import Community from "@/components/Community";
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
       <HowItWorks />
       <SuccessStories />
       <PetCareTips />
-      <CommunityCTA />
+      <Community />
     </div>
   );
 }

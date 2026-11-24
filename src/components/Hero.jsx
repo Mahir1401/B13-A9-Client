@@ -32,8 +32,8 @@ export default function Hero() {
 
           <h1 className="mb-5 font-serif text-4xl font-bold leading-[1.1] tracking-tight text-cream sm:text-5xl lg:text-[3.4rem]">
             Every pet deserves a{" "}
-            <span className="inline-block rounded-full bg-baby-blue px-4 py-0.5 text-brown">
-              forever home
+            <span className="inline-block rounded-full bg-baby-blue mt-1.5 px-4 py-0.5 text-brown">
+              Forever Home
             </span>
           </h1>
 

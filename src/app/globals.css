@@ -1,12 +1,6 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
-/*
- * Brand palette + fonts -> Tailwind utilities
- *   bg-brown, text-cream, bg-baby-blue, bg-cream-light ...
- *   font-sans  -> Geist     (--font-geist-sans, set by next/font in layout.js)
- *   font-serif -> Fraunces  (--font-fraunces,   set by next/font in layout.js)
- */
 @theme static {
   --color-brown: #3B2418;
   --color-cream: #F2E8DA;
@@ -17,24 +11,12 @@
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
-/*
- * HeroUI Theme Customization (brown / cream / baby blue)
- * @see https://heroui.com/docs/react/getting-started/theming
- *
- * HeroUI semantic classes now follow this palette automatically:
- *   bg-background  bg-surface  bg-accent  bg-field  bg-default
- *   text-foreground  text-muted  text-accent-foreground
- *   border-border  border-separator
- * Light/dark switching happens through these variables, so components do not
- * need dark: variants for colors.
- */
 
 :root,
 .light,
 .default,
 [data-theme="light"],
 [data-theme="default"] {
-  /* Theme Colors (Light Mode) */
   --accent: #8EC5FF;
   --accent-foreground: #3B2418;
   --background: #F2E8DA;
@@ -67,18 +49,15 @@
   --warning: oklch(78.19% 0.1590 72.33);
   --warning-foreground: oklch(21.03% 0.0059 72.33);
 
-  /* Border Radius */
   --radius: 0.5rem;
   --field-radius: 0.75rem;
 
-  /* Font Family (Geist, loaded in layout.js) */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 .dark,
 [data-theme="dark"] {
   color-scheme: dark;
-  /* Theme Colors (Dark Mode) */
   --accent: #8EC5FF;
   --accent-foreground: #3B2418;
   --background: #1E120C;

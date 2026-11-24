@@ -22,7 +22,7 @@ const actions = [
   },
 ];
 
-export default function CommunityCTA() {
+export default function Community() {
   return (
     <section className="relative w-full overflow-hidden bg-brown px-6 py-20 text-cream">
       <div
