@@ -8,7 +8,6 @@ import { Heart, PawPrint, Search } from "lucide-react";
 export default function Hero() {
   return (
     <section className="relative w-full overflow-hidden bg-brown">
-      {/* Soft radial glow for depth */}
       <div
         aria-hidden
         className="pointer-events-none absolute -right-24 -top-24 size-[32rem] rounded-full bg-baby-blue/15 blur-3xl"
