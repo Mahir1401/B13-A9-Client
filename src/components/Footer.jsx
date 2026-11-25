@@ -3,13 +3,6 @@
 import Link from "next/link";
 import { PawPrint, Heart, Mail, MapPin, Clock, ChevronRight } from "lucide-react";
 
-const exploreLinks = [
-  { label: "Home", href: "/" },
-  { label: "All Pets", href: "/pets" },
-  { label: "Sign In", href: "/login" },
-  { label: "Create an Account", href: "/register" },
-];
-
 const socialLinks = [
   { label: "Facebook", href: "https://facebook.com" },
   { label: "Instagram", href: "https://instagram.com" },
@@ -19,7 +12,7 @@ const socialLinks = [
 
 const contactItems = [
   { icon: Mail, text: "hello@petnest.org" },
-  { icon: MapPin, text: "124 Meadow Lane, Suite 200" },
+  { icon: MapPin, text: "House 124, Road 9/A, Dhanmondi" },
   { icon: Clock, text: "Mon - Sat, 9:00 AM - 6:00 PM" },
 ];
 
@@ -69,26 +62,6 @@ export default function Footer() {
             ))}
           </ul>
         </div>
-
-        <div className="flex flex-col">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-baby-blue">
-            Explore
-          </p>
-          <ul className="flex flex-col gap-3">
-            {exploreLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="group inline-flex items-center gap-1 text-sm text-cream/80 transition-all duration-300 hover:translate-x-1 hover:text-baby-blue"
-                >
-                  <ChevronRight className="size-3.5 text-baby-blue opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
         <div className="flex flex-col">
           <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-baby-blue">
             Contact
@@ -110,10 +83,10 @@ export default function Footer() {
         <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-3 text-xs text-cream/65 sm:flex-row">
           <p>© {new Date().getFullYear()} PetNest. All rights reserved.</p>
           <div className="flex items-center gap-5">
-            <Link href="/privacy" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Terms of Service
             </Link>
           </div>
