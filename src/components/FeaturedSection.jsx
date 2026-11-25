@@ -34,7 +34,7 @@ const FeaturedPets = async () => {
           <>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {featuredPets.map((pet, index) => (
-                <PetCard key={pet._id || pet.id} pet={pet} index={index} />
+                <PetCard key={pet._id} pet={pet} index={index} />
               ))}
             </div>
 

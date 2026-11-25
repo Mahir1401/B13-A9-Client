@@ -2,7 +2,22 @@
 
 import { signOut, useSession } from '@/lib/auth-client';
 import { Button, Dropdown, Header, Label, Separator, useTheme } from '@heroui/react';
-import { Home, Moon, PawPrint, Search, Sun, ChevronDown, LayoutGrid, LogOut, LogIn, Rocket, Menu, X } from 'lucide-react';
+import {
+  Home,
+  Moon,
+  PawPrint,
+  Search,
+  Sun,
+  ChevronDown,
+  LayoutGrid,
+  LogOut,
+  LogIn,
+  Rocket,
+  ClipboardList,
+  PlusCircle,
+  Menu,
+  X,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -37,27 +52,32 @@ export default function Navbar() {
       router.push('/');
       router.refresh();
     } catch (error) {
+      console.error('Logout failed:', error);
       toast.error('Failed to log out');
     }
   };
 
   const handleMenuAction = (key) => {
     if (key === 'dashboard') {
-      router.push('/requests');
+      router.push('/my-listings');
     } else if (key === 'logout') {
       handleLogout();
     }
   };
 
   const navLinks = [
-    { href: '/', label: 'Home', icon: Home },
-    { href: '/pets', label: 'All Pets', icon: Search }
+    { href: '/', label: 'Home', icon: Home, private: false },
+    { href: '/pets', label: 'All Pets', icon: Search, private: false },
+    { href: '/requests', label: 'My Requests', icon: ClipboardList, private: true },
+    { href: '/add-pet', label: 'Add Pet', icon: PlusCircle, private: true },
   ];
 
+  const visibleLinks = navLinks.filter((link) => !link.private || Boolean(user));
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-cream/15 bg-brown transition-colors">
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between px-4 sm:px-6">
+        {/* Logo + Website Name */}
         <Link href="/" className="group flex items-center gap-2.5">
           <PawPrint className="size-8 rounded-full border-2 border-baby-blue p-1 text-baby-blue transition-transform group-hover:scale-105" />
           <span className="font-serif text-[1.35rem] font-bold tracking-[-0.02em] text-cream">
@@ -65,8 +85,9 @@ export default function Navbar() {
           </span>
         </Link>
 
+        {/* Desktop Nav Links */}
         <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
-          {navLinks.map(({ href, label, icon: Icon }) => {
+          {visibleLinks.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
             return (
               <Link
@@ -85,6 +106,7 @@ export default function Navbar() {
           })}
         </nav>
 
+        {/* Right Controls */}
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -106,8 +128,8 @@ export default function Navbar() {
                 className="group flex cursor-pointer items-center gap-2 bg-transparent p-0 focus:outline-none"
               >
                 <Image
-                  src={user.image}
-                  alt={user.name}
+                  src={user.image || '/image_pgdFnZ.png'}
+                  alt={user.name || 'User Profile'}
                   referrerPolicy="no-referrer"
                   className="size-8 rounded-full border-2 border-baby-blue object-cover"
                   height={32}
@@ -183,6 +205,7 @@ export default function Navbar() {
             </div>
           )}
 
+          {/* Mobile Menu Toggle */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -196,7 +219,7 @@ export default function Navbar() {
 
       {mobileMenuOpen && (
         <div className="flex flex-col gap-2 border-t border-cream/15 bg-brown px-[5%] py-4 md:hidden">
-          {navLinks.map(({ href, label, icon: Icon }) => {
+          {visibleLinks.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
             return (
               <Link
@@ -213,6 +236,25 @@ export default function Navbar() {
               </Link>
             );
           })}
+
+          {!isPending && !user && (
+            <div className="mt-1 flex items-center gap-3 border-t border-cream/15 pt-3">
+              <Link
+                href="/login"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full border border-cream/25 px-4 py-2.5 text-sm font-medium text-cream hover:bg-white/10"
+              >
+                <LogIn size={16} className="text-baby-blue" />
+                <span>Login</span>
+              </Link>
+              <Link
+                href="/register"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-baby-blue px-4 py-2.5 text-sm font-semibold text-brown"
+              >
+                <Rocket size={16} />
+                <span>Get Started</span>
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </header>
