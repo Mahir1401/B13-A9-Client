@@ -3,6 +3,10 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
+import { Heart } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
+import RequestFormModal from "./RequestFormModal";
 
 const speciesEmoji = {
   dog: "🐶",
@@ -26,6 +30,18 @@ function getStatusClasses(status) {
 }
 
 export default function PetCard({ pet, index = 0, onSelectPet }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  const isAvailable = pet.status === "Available";
+  const isOwner = Boolean(user?.email && pet.ownerEmail === user.email);
+
+  const handleAdoptNowClick = () => {
+    router.push(`/login?callbackUrl=${encodeURIComponent(pathname || "/pets")}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -102,10 +118,32 @@ export default function PetCard({ pet, index = 0, onSelectPet }) {
         <div className="mt-auto flex gap-2">
           <Link
             href={`/pets/${pet._id}`}
-            className="flex-1 rounded-full bg-accent px-4 py-2.5 text-center text-sm font-semibold text-accent-foreground transition-all hover:opacity-90 active:scale-[0.99]"
+            className="flex-1 rounded-full border border-border bg-background px-4 py-2.5 text-center text-xs font-semibold text-foreground transition-all hover:opacity-90 active:scale-[0.99]"
           >
             Meet {pet.name}
           </Link>
+
+          {isOwner ? (
+            <span className="flex flex-1 items-center justify-center rounded-full bg-default px-4 py-2.5 text-center text-xs font-semibold text-default-foreground">
+              Your Listing
+            </span>
+          ) : user ? (
+            <RequestFormModal pet={pet} user={user} size="sm" />
+          ) : (
+            <button
+              type="button"
+              onClick={handleAdoptNowClick}
+              disabled={!isAvailable}
+              className={`inline-flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold shadow-xs transition-all ${
+                isAvailable
+                  ? "cursor-pointer bg-accent text-accent-foreground hover:opacity-90 active:scale-[0.99]"
+                  : "cursor-not-allowed bg-default text-muted"
+              }`}
+            >
+              <Heart className="size-3.5" />
+              {isAvailable ? "Adopt Now" : pet.status}
+            </button>
+          )}
         </div>
       </div>
     </motion.div>

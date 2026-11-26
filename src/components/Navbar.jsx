@@ -52,14 +52,13 @@ export default function Navbar() {
       router.push('/');
       router.refresh();
     } catch (error) {
-      console.error('Logout failed:', error);
       toast.error('Failed to log out');
     }
   };
 
   const handleMenuAction = (key) => {
     if (key === 'dashboard') {
-      router.push('/my-listings');
+      router.push('/requests');
     } else if (key === 'logout') {
       handleLogout();
     }
@@ -77,7 +76,6 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-cream/15 bg-brown transition-colors">
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Logo + Website Name */}
         <Link href="/" className="group flex items-center gap-2.5">
           <PawPrint className="size-8 rounded-full border-2 border-baby-blue p-1 text-baby-blue transition-transform group-hover:scale-105" />
           <span className="font-serif text-[1.35rem] font-bold tracking-[-0.02em] text-cream">
@@ -85,7 +83,6 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Nav Links */}
         <nav className="hidden items-center gap-2 text-sm font-medium md:flex">
           {visibleLinks.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
@@ -106,7 +103,6 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right Controls */}
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -205,7 +201,6 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Mobile Menu Toggle */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}

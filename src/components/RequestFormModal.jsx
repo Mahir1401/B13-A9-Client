@@ -11,6 +11,7 @@ import {
   Modal,
 } from "@heroui/react";
 import { Heart, PawPrint, Send } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 import { submitAdoptionRequest } from "@/lib/pets/action";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -23,7 +24,12 @@ const readOnlyInputClass = `${inputClass} opacity-80`;
 const labelClass =
   "text-xs font-semibold uppercase tracking-wider text-foreground/80";
 
-export default function RequestFormModal({ pet, user, token }) {
+const sizeClasses = {
+  lg: "px-7 py-3.5 text-sm",
+  sm: "px-4 py-2.5 text-xs",
+};
+
+export default function RequestFormModal({ pet, user, size = "lg" }) {
   const router = useRouter();
   const isAvailable = pet?.status === "Available";
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +52,8 @@ export default function RequestFormModal({ pet, user, token }) {
     setIsSubmitting(true);
 
     try {
-      await submitAdoptionRequest(request, token);
+      const { data: tokenData } = await authClient.token();
+      await submitAdoptionRequest(request, tokenData?.token);
       toast.success("Adoption request submitted!");
       setIsOpen(false);
       router.push("/requests");
@@ -58,17 +65,21 @@ export default function RequestFormModal({ pet, user, token }) {
     }
   };
 
+  const triggerClassName = `inline-flex flex-1 items-center justify-center gap-2 rounded-full font-semibold shadow-xs transition-all ${
+    sizeClasses[size] || sizeClasses.lg
+  } ${
+    isAvailable
+      ? "cursor-pointer bg-accent text-accent-foreground hover:opacity-90 active:scale-[0.99]"
+      : "cursor-not-allowed bg-default text-muted"
+  }`;
+
   return (
     <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
       <Button
         type="button"
         isDisabled={!isAvailable}
         onPress={() => isAvailable && setIsOpen(true)}
-        className={`inline-flex flex-1 items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold shadow-xs transition-all ${
-          isAvailable
-            ? "cursor-pointer bg-accent text-accent-foreground hover:opacity-90 active:scale-[0.99]"
-            : "cursor-not-allowed bg-default text-muted"
-        }`}
+        className={triggerClassName}
       >
         <Heart className="size-4" />
         {isAvailable ? `Adopt ${pet.name}` : pet.status}
