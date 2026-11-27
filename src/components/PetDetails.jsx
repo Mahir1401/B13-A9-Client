@@ -3,17 +3,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  User,
-  Calendar,
-  MapPin,
-  DollarSign,
-  ShieldCheck,
-  Syringe,
-  PawPrint,
-  Tag,
-} from "lucide-react";
+import { ArrowLeft, User, Calendar, MapPin, DollarSign, ShieldCheck, Syringe, PawPrint, Tag } from "lucide-react";
 import RequestFormModal from "./RequestFormModal";
 
 export default function PetDetails({ pet, user, token }) {

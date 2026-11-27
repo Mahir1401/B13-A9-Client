@@ -120,7 +120,6 @@ export default function AllPets() {
 
         {hasActiveFilters && (
           <button
-            type="button"
             onClick={handleReset}
             className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-danger hover:underline"
           >

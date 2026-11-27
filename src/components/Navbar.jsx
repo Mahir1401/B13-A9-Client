@@ -2,22 +2,7 @@
 
 import { signOut, useSession } from '@/lib/auth-client';
 import { Button, Dropdown, Header, Label, Separator, useTheme } from '@heroui/react';
-import {
-  Home,
-  Moon,
-  PawPrint,
-  Search,
-  Sun,
-  ChevronDown,
-  LayoutGrid,
-  LogOut,
-  LogIn,
-  Rocket,
-  ClipboardList,
-  PlusCircle,
-  Menu,
-  X,
-} from 'lucide-react';
+import { Home, Moon, PawPrint, Search, Sun, ChevronDown, LayoutGrid, LogOut, LogIn, Rocket, ClipboardList, PlusCircle, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';

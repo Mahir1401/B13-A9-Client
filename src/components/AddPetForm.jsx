@@ -194,7 +194,7 @@ export default function AddPetListingSection() {
               <Label className={labelClass}>
                 Pet Image URL
               </Label>
-              <Input placeholder="https://ibb.co..." className={inputClass} />
+              <Input placeholder="https://example.com/..." className={inputClass} />
               <FieldError className={errorClass} />
             </TextField>
 

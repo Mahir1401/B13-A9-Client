@@ -1,14 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Button,
-  Description,
-  FieldError,
-  Form,
-  Input,
-  Label,
-  TextField,
-} from "@heroui/react";
+import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { CheckCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -135,7 +127,7 @@ export default function Register() {
           className="flex flex-col gap-1.5"
         >
           <Label className={labelClass}>Photo URL</Label>
-          <Input placeholder="https://example.com" className={inputClass} />
+          <Input placeholder="https://example.com/..." className={inputClass} />
           <FieldError className="text-xs text-danger" />
         </TextField>
 
