@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "@heroui/react";
-import { Eye, Trash2 } from "lucide-react";
+import { Button, Modal } from "@heroui/react";
+import { Eye, Trash2, TriangleAlert } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { authClient, useSession } from "@/lib/auth-client";
 import { getMyRequests } from "@/lib/pets/data";
@@ -20,6 +20,8 @@ export default function RequestsPage() {
   const { data: session } = useSession();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cancelTarget, setCancelTarget] = useState(null);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     const email = session?.user?.email;
@@ -40,14 +42,19 @@ export default function RequestsPage() {
     loadRequests();
   }, [session?.user?.email]);
 
-  const handleCancel = async (id) => {
+  const handleConfirmCancel = async () => {
+    if (!cancelTarget) return;
+    setCancelling(true);
     try {
       const { data: tokenData } = await authClient.token();
-      await cancelAdoptionRequest(id, tokenData?.token);
-      setRequests((prev) => prev.filter((item) => item._id !== id));
+      await cancelAdoptionRequest(cancelTarget._id, tokenData?.token);
+      setRequests((prev) => prev.filter((item) => item._id !== cancelTarget._id));
       toast.success("Request cancelled");
+      setCancelTarget(null);
     } catch (err) {
       toast.error(err.message || "Failed to cancel request");
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -108,7 +115,7 @@ export default function RequestsPage() {
 
                   <Button
                     size="sm"
-                    onPress={() => handleCancel(req._id)}
+                    onPress={() => setCancelTarget(req)}
                     className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-danger/15 px-4 py-2 text-xs font-semibold text-danger hover:opacity-85"
                   >
                     <Trash2 className="size-3.5" />
@@ -120,6 +127,48 @@ export default function RequestsPage() {
           </div>
         )}
       </div>
+
+      <Modal.Backdrop
+        isOpen={!!cancelTarget}
+        onOpenChange={(open) => {
+          if (!open && !cancelling) setCancelTarget(null);
+        }}
+      >
+        <Modal.Container>
+          <Modal.Dialog className="sm:max-w-[400px]">
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Icon className="bg-danger/15 text-danger">
+                <TriangleAlert className="size-5" />
+              </Modal.Icon>
+              <Modal.Heading>Cancel adoption request?</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <p className="text-sm">
+                Your request for <strong>{cancelTarget?.petName}</strong> will be
+                withdrawn. This can&apos;t be undone, but you can submit a new request
+                later.
+              </p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onPress={() => setCancelTarget(null)}
+                isDisabled={cancelling}
+              >
+                Keep request
+              </Button>
+              <Button
+                variant="danger"
+                onPress={handleConfirmCancel}
+                isPending={cancelling}
+              >
+                Yes, cancel it
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </section>
   );
 }

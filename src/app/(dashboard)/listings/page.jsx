@@ -10,6 +10,7 @@ import { authClient, useSession } from "@/lib/auth-client";
 import { getMyListings } from "@/lib/pets/data";
 import { deletePet, updatePet } from "@/lib/pets/action";
 import RequestsModal from "@/components/RequestsModal";
+import Loading from "@/components/Loading";
 
 const fieldInputClass =
   "w-full rounded-xl border border-border bg-field p-2.5 text-sm text-field-foreground focus:outline-none focus:ring-2 focus:ring-focus";
@@ -111,7 +112,7 @@ export default function ListingPage() {
         </div>
 
         {loading ? (
-          <p className="text-sm text-foreground/75">Loading your listings...</p>
+          <Loading fullScreen={false} />
         ) : pets.length === 0 ? (
           <div className="rounded-3xl border border-border bg-surface p-8 text-center">
             <p className="mb-4 text-sm text-surface-foreground/85">

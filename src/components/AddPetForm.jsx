@@ -1,17 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Button,
-  FieldError,
-  Form,
-  Input,
-  Label,
-  ListBox,
-  Select,
-  TextArea,
-  TextField,
-} from "@heroui/react";
+import { Button, FieldError, Form, Input, Label, ListBox, Select, TextArea, TextField } from "@heroui/react";
 import { PawPrint, Plus, RotateCcw } from "lucide-react";
 import { authClient, useSession } from "@/lib/auth-client";
 import { createPet } from "@/lib/pets/action";
@@ -51,7 +41,6 @@ const labelClass =
 
 const errorClass = "text-xs text-danger";
 
-// One dropdown field (label + trigger + options), used for every select below.
 function SelectField({ name, label, placeholder, options }) {
   return (
     <Select
@@ -203,7 +192,7 @@ export default function AddPetListingSection() {
 
             <TextField isRequired name="imageUrl" type="url" className="flex flex-col gap-1.5">
               <Label className={labelClass}>
-                Pet Image URL (upload to imgbb.com first)
+                Pet Image URL
               </Label>
               <Input placeholder="https://ibb.co..." className={inputClass} />
               <FieldError className={errorClass} />
@@ -239,7 +228,7 @@ export default function AddPetListingSection() {
                 name="ownerEmail"
                 type="email"
                 isReadOnly
-                value={session?.user?.email || ""}
+                value={session?.user?.email}
                 className="flex flex-col gap-1.5"
               >
                 <Label className={labelClass}>Owner Email</Label>
